@@ -28,7 +28,6 @@ __license__ = """
     """ % __copyright__
 
 
-from coveralls import coverage, report
 
 def run():
     """Run cpp coverage
@@ -36,6 +35,7 @@ def run():
     import yaml
     import os
     import argparse
+    from coveralls import coverage, report
 
     parser = argparse.ArgumentParser('coveralls')
     parser.add_argument('--gcov', metavar='FILE', default='gcov',
