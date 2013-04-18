@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+from coveralls import gitrepo
 
 
 def is_source_file(filepath):
@@ -61,4 +62,5 @@ def collect(args):
                                 coverage.append(int(cov_num))
                 src_report['coverage'] = coverage
                 report['source_files'].append(src_report)
+    report['git'] = gitrepo.gitrepo('.')
     return report
