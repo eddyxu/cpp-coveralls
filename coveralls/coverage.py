@@ -11,11 +11,25 @@ def is_source_file(filepath):
     return os.path.splitext(filepath)[1] in ['.h', '.hpp', '.cpp', '.cc', '.c']
 
 
+def exclude_paths(args):
+    """Returns the absolute paths for excluded path.
+    """
+    results = []
+    if args.exclude:
+        for excl_path in args.exclude + ['.git', '.svn']:
+            results.append(os.path.abspath(os.path.join(args.root, excl_path)))
+    return results
+
+
 def run_gcov(args):
+    excl_paths = exclude_paths(args)
     for root, dirs, files in os.walk(args.root):
+        filtered_dirs = []
         for dirpath in dirs:
-            if dirpath == 'test':
-                dirs.remove(dirpath)
+            abspath = os.path.abspath(os.path.join(root, dirpath))
+            if not abspath in excl_paths:
+                filtered_dirs.append(dirpath)
+        dirs[:] = filtered_dirs
         for filepath in files:
             basename, ext = os.path.splitext(filepath)
             if ext == '.gcno':
@@ -26,19 +40,24 @@ def run_gcov(args):
 def collect(args):
     """Collect coverage reports.
     """
+    excl_paths = exclude_paths(args)
+
     report = {}
     report['service_name'] = args.service_name
     report['service_job_id'] = args.service_job_id
     report['source_files'] = []
     for root, dirs, files in os.walk(args.root):
+        filtered_dirs = []
         for dirpath in dirs:
-            if dirpath == 'test':
-                dirs.remove(dirpath)
-            #if os.path.join(root, dirpath) in args.exclude:
-            #    dirs.remove(dirpath)
+            abspath = os.path.abspath(os.path.join(root, dirpath))
+            if not abspath in excl_paths:
+                filtered_dirs.append(dirpath)
+        dirs[:] = filtered_dirs
+
         for filepath in files:
             if is_source_file(filepath):
-                src_path = os.path.relpath(os.path.join(root, filepath), '.')
+                src_path = os.path.relpath(os.path.join(root, filepath),
+                                           args.root)
                 gcov_path = src_path + '.gcov'
                 src_report = {}
                 src_report['name'] = src_path
