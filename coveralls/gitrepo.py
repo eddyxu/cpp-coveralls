@@ -1,6 +1,6 @@
-import locale
 import os
-import subprocess
+
+from sh import git
 
 
 def gitrepo(self):
@@ -40,16 +40,9 @@ def gitrepo(self):
         'branch': os.environ.get('TRAVIS_BRANCH', git(
             'rev-parse', '--abbrev-ref', 'HEAD').strip()),
         'remotes': [{'name': line.split()[0], 'url': line.split()[1]}
-                    for line in git('remote', '-v') if '(fetch)' in line]
+                    for line in git.remote('-v') if '(fetch)' in line]
     }}
 
 
 def gitlog(format):
-    return str(git('--no-pager', 'log', '-1', '--pretty=format:%s' % format))
-
-
-def git(*arguments):
-    """Return output from git."""
-    process = subprocess.Popen(['git'] + list(arguments),
-                               stdout=subprocess.PIPE)
-    return process.communicate()[0].decode(locale.getpreferredencoding(False))
+    return str(git('--no-pager', 'log', '-1', pretty='format:%s' % format))
