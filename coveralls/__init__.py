@@ -8,8 +8,8 @@ __classifiers__ = [
     'Operating System :: OS Independent',
     'Programming Language :: Python',
     'Topic :: Internet :: WWW/HTTP',
-    'Topic :: Software Development :: Libraries',
-    ]
+    'Topic :: Software Development :: Libraries']
+
 __copyright__ = "2013, %s " % __author__
 __license__ = """
     Copyright %s.
@@ -26,7 +26,6 @@ __license__ = """
     See the License for the specific language governing permissions and
     limitations under the License.
     """ % __copyright__
-
 
 
 def run():

@@ -12,7 +12,7 @@ def post_report(coverage):
         result = response.json()
     except ValueError:
         result = {'error': 'Failure to submit data. '
-            'Response [%(status)s]: %(text)s' % {
-            'status': response.status_code,
-                'text': response.text}}
+                  'Response [%(status)s]: %(text)s' % {
+                      'status': response.status_code,
+                      'text': response.text}}
     print result
