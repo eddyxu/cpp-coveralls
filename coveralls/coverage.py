@@ -45,6 +45,8 @@ def collect(args):
     report = {}
     report['service_name'] = args.service_name
     report['service_job_id'] = args.service_job_id
+    if args.repo_token:
+        report['repo_token'] = args.repo_token
     report['source_files'] = []
     for root, dirs, files in os.walk(args.root):
         filtered_dirs = []
