@@ -2,7 +2,7 @@ __author__ = 'Lei Xu <eddyxu@gmail.com>'
 __version__ = '0.0.1'
 
 __classifiers__ = [
-    'Development Status :: 5 - Production/Stable',
+    'Development Status :: 2 - Pre-Alpha',
     'Intended Audience :: Developers',
     'License :: OSI Approved :: Apache Software License',
     'Operating System :: OS Independent',
@@ -55,6 +55,7 @@ def run():
         pass
     yml = yml or {}
 
+    args.repo_token = yml.get('repo_token', '')
     args.service_name = yml.get('service_name', 'travis-ci')
     args.service_job_id = os.environ.get('TRAVIS_JOB_ID', '')
 
