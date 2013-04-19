@@ -36,7 +36,7 @@ def gitrepo(self):
             'committer_name': gitlog('%cN'),
             'committer_email': gitlog('%ce'),
             'message': gitlog('%s'),
-        },
+            },
         'branch': os.environ.get('TRAVIS_BRANCH', git(
             'rev-parse', '--abbrev-ref', 'HEAD').strip()),
         'remotes': [{'name': line.split()[0], 'url': line.split()[1]}

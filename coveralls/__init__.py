@@ -10,7 +10,7 @@ __classifiers__ = [
     'Topic :: Internet :: WWW/HTTP',
     'Topic :: Software Development :: Libraries']
 
-__copyright__ = "2013, %s " % __author__
+__copyright__ = '2013, %s ' % __author__
 __license__ = """
     Copyright %s.
 
@@ -29,8 +29,7 @@ __license__ = """
 
 
 def run():
-    """Run cpp coverage
-    """
+    """Run cpp coverage."""
     import os
     import argparse
     from coveralls import coverage, report
