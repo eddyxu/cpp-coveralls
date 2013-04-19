@@ -22,10 +22,8 @@ classifiers = pkg.__classifiers__
 description='Upload gcov to coveralls.io'
 long_description=description
 
-try:
-    reqs = open(os.path.join(os.path.dirname(__file__), 'requirements.txt')).read()
-except (IOError, OSError):
-    reqs = ''
+with open(os.path.join(os.path.dirname(__file__), 'requirements.txt')) as f:
+    reqs = f.read()
 
 setup(
     name=name,
