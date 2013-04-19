@@ -78,7 +78,8 @@ def collect(args):
                                 coverage.append(None)
                             elif cov_num == '#####':
                                 # Avoid false positives.
-                                if text.lstrip().startswith('static'):
+                                if (text.lstrip().startswith('static') or
+                                        text.strip() == '}'):
                                     coverage.append(None)
                                 else:
                                     coverage.append(0)
