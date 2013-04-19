@@ -79,6 +79,10 @@ def collect(args):
                                 coverage.append(0)
                             else:
                                 coverage.append(int(cov_num))
+
+                            if 'AdobeRGBToXYZ' in line:
+                                print(line)
+                                print(coverage)
                 src_report['coverage'] = coverage
                 report['source_files'].append(src_report)
     report['git'] = gitrepo.gitrepo('.')
