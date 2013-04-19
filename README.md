@@ -1,7 +1,7 @@
 Upload C++/C coverage report to coveralls.io
 =============
 
-Inspired from z4r/python-coveralls, it uploads the coverage report of C/C++ project to coveralls.io
+Inspired from [z4r/python-coveralls](https://github.com/z4r/python-coveralls), it uploads the coverage report of C/C++ project to [coveralls.io](https://coveralls.io/)
 
 
 # Instruction
