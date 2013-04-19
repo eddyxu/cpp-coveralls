@@ -6,14 +6,12 @@ from coveralls import gitrepo
 
 
 def is_source_file(filepath):
-    """Returns true if it is a C++ source file
-    """
+    """Returns true if it is a C++ source file."""
     return os.path.splitext(filepath)[1] in ['.h', '.hpp', '.cpp', '.cc', '.c']
 
 
 def exclude_paths(args):
-    """Returns the absolute paths for excluded path.
-    """
+    """Returns the absolute paths for excluded path."""
     results = []
     if args.exclude:
         for excl_path in args.exclude + ['.git', '.svn']:
@@ -38,8 +36,7 @@ def run_gcov(args):
 
 
 def collect(args):
-    """Collect coverage reports.
-    """
+    """Collect coverage reports."""
     excl_paths = exclude_paths(args)
 
     report = {}

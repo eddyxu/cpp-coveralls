@@ -19,8 +19,8 @@ email = email.strip('<>')
 version = pkg.__version__
 classifiers = pkg.__classifiers__
 
-description='Upload gcov to coveralls.io'
-long_description=description
+description = 'Upload gcov to coveralls.io'
+long_description = description
 
 with open(os.path.join(os.path.dirname(__file__), 'requirements.txt')) as f:
     reqs = f.read()
