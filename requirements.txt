@@ -1,3 +1,2 @@
-sh
 requests
 PyYAML
