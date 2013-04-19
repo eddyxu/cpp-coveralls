@@ -53,7 +53,7 @@ def run():
     yml = {}
     try:
         with open(args.coveralls_yaml, 'r') as fp:
-            if yaml is None:
+            if not yaml:
                 raise SystemExit(
                     'PyYAML is required for parsing configuration')
             yml = yaml.load(fp)
