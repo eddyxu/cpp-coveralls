@@ -76,13 +76,13 @@ def collect(args):
                             if cov_num == '-':
                                 coverage.append(None)
                             elif cov_num == '#####':
-                                coverage.append(0)
+                                # Avoid false positives.
+                                if line.lstrip().startswith('static'):
+                                    coverage.append(None)
+                                else:
+                                    coverage.append(0)
                             else:
                                 coverage.append(int(cov_num))
-
-                            if 'AdobeRGBToXYZ' in line:
-                                print(line)
-                                print(coverage)
                 src_report['coverage'] = coverage
                 report['source_files'].append(src_report)
     report['git'] = gitrepo.gitrepo('.')
