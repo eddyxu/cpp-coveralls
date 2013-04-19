@@ -18,7 +18,7 @@ language: cpp
 compiler:
   - gcc
 before_install:
-  - sudo pip install git+git://github.com/eddyxu/cpp-coveralls.git#egg=cpp_coveralls --use-mirrors
+  - sudo pip install cpp-coveralls --use-mirrors
 script:
   - ./configure --enable-gcov && make && make check
 after_success:
