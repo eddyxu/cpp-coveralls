@@ -31,7 +31,6 @@ __license__ = """
 def run():
     """Run cpp coverage
     """
-    import yaml
     import os
     import argparse
     from coveralls import coverage, report
@@ -47,11 +46,16 @@ def run():
                         help='coveralls yaml file name')
     args = parser.parse_args()
 
+    try:
+        import yaml
+    except ImportError:
+        yaml = None
+
     yml = {}
     try:
         with open(args.coveralls_yaml, 'r') as fp:
             yml = yaml.load(fp)
-    except:
+    except IOError:
         pass
     yml = yml or {}
 
