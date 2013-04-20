@@ -1,5 +1,5 @@
 __author__ = 'Lei Xu <eddyxu@gmail.com>'
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
 __classifiers__ = [
     'Development Status :: 2 - Pre-Alpha',
