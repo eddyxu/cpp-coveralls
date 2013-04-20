@@ -41,8 +41,10 @@ def run():
                         help='Sets the root directory')
     parser.add_argument('-e', '--exclude', metavar='DIR|FILE', action='append',
                         help='Exclude file or directory.')
-    parser.add_argument('--coveralls-yaml', '-y', default='.coveralls.yml',
+    parser.add_argument('-y', '--coveralls-yaml', default='.coveralls.yml',
                         help='coveralls yaml file name')
+    parser.add_argument('--verbose', action='store_true',
+                        help='print verbose messages')
     args = parser.parse_args()
 
     try:
@@ -66,4 +68,6 @@ def run():
 
     coverage.run_gcov(args)
     cov_report = coverage.collect(args)
+    if args.verbose:
+        print(cov_report)
     report.post_report(cov_report)
