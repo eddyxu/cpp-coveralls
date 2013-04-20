@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import requests
 import json
 
@@ -14,4 +16,4 @@ def post_report(coverage):
                   'Response [%(status)s]: %(text)s' % {
                       'status': response.status_code,
                       'text': response.text}}
-    print result
+    print(result)

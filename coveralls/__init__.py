@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 __author__ = 'Lei Xu <eddyxu@gmail.com>'
 __version__ = '0.0.1'
 
