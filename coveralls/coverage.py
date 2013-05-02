@@ -73,11 +73,20 @@ def collect(args):
                             report_fields = line.split(':')
                             cov_num = report_fields[0].strip()
                             line_num = int(report_fields[1].strip())
+                            text = report_fields[2]
                             if line_num == 0:
                                 continue
                             if cov_num == '-':
                                 coverage.append(None)
                             elif cov_num == '#####':
+                                if (text.lstrip().startswith('static') or
+                                        text.strip() == '}'):
+                                    coverage.append(None)
+                                else:
+                                    coverage.append(0)
+                            elif cov_num == '=====':
+                                # This is indicitive of a gcov output parse
+                                # error.
                                 coverage.append(0)
                             else:
                                 coverage.append(int(cov_num))
