@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 __author__ = 'Lei Xu <eddyxu@gmail.com>'
 __version__ = '0.0.2'
 
@@ -10,7 +12,7 @@ __classifiers__ = [
     'Topic :: Internet :: WWW/HTTP',
     'Topic :: Software Development :: Libraries']
 
-__copyright__ = "2013, %s " % __author__
+__copyright__ = '2013, %s ' % __author__
 __license__ = """
     Copyright %s.
 
@@ -29,9 +31,7 @@ __license__ = """
 
 
 def run():
-    """Run cpp coverage
-    """
-    import yaml
+    """Run cpp coverage."""
     import os
     import argparse
     from coveralls import coverage, report
@@ -43,17 +43,27 @@ def run():
                         help='Sets the root directory')
     parser.add_argument('-e', '--exclude', metavar='DIR|FILE', action='append',
                         help='Exclude file or directory.')
-    parser.add_argument('--coveralls_yaml', '-y', default='.coveralls.yml',
+    parser.add_argument('-y', '--coveralls-yaml', default='.coveralls.yml',
                         help='coveralls yaml file name')
     parser.add_argument('--repo_token', default='', metavar='TOKEN',
                         help='Manually set the repo_token of this project')
+    parser.add_argument('--verbose', action='store_true',
+                        help='print verbose messages')
     args = parser.parse_args()
+
+    try:
+        import yaml
+    except ImportError:
+        yaml = None
 
     yml = {}
     try:
         with open(args.coveralls_yaml, 'r') as fp:
+            if not yaml:
+                raise SystemExit(
+                    'PyYAML is required for parsing configuration')
             yml = yaml.load(fp)
-    except:
+    except IOError:
         pass
     yml = yml or {}
 
@@ -64,4 +74,6 @@ def run():
 
     coverage.run_gcov(args)
     cov_report = coverage.collect(args)
+    if args.verbose:
+        print(cov_report)
     report.post_report(cov_report)
