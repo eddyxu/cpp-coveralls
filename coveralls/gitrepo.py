@@ -29,20 +29,18 @@ def gitrepo(self):
     """
 
     return {
-        'git': {
-            'head': {
-                'id': gitlog('%H'),
-                'author_name': gitlog('%aN'),
-                'author_email': gitlog('%ae'),
-                'committer_name': gitlog('%cN'),
-                'committer_email': gitlog('%ce'),
-                'message': gitlog('%s')
-            },
+        'head': {
+            'id': gitlog('%H'),
+            'author_name': gitlog('%aN'),
+            'author_email': gitlog('%ae'),
+            'committer_name': gitlog('%cN'),
+            'committer_email': gitlog('%ce'),
+            'message': gitlog('%s')
+        },
         'branch': os.environ.get('TRAVIS_BRANCH', git(
             'rev-parse', '--abbrev-ref', 'HEAD').strip()),
         'remotes': [{'name': line.split()[0], 'url': line.split()[1]}
                     for line in git('remote', '-v') if '(fetch)' in line]
-        }
     }
 
 
