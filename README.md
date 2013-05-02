@@ -1,7 +1,7 @@
 Upload C++/C coverage report to coveralls.io
 =============
 
-[![Build Status](https://travis-ci.org/myint/cpp-coveralls.png?branch=master)](https://travis-ci.org/eddyxu/cpp-coveralls)
+[![Build Status](https://travis-ci.org/eddyxu/cpp-coveralls.png?branch=master)](https://travis-ci.org/eddyxu/cpp-coveralls)
 
 Inspired from [z4r/python-coveralls](https://github.com/z4r/python-coveralls), it uploads the coverage report of C/C++ project to [coveralls.io](https://coveralls.io/)
 
