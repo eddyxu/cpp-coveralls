@@ -45,6 +45,8 @@ def run():
                         help='Exclude file or directory.')
     parser.add_argument('--coveralls_yaml', '-y', default='.coveralls.yml',
                         help='coveralls yaml file name')
+    parser.add_argument('--repo_token', default='',
+                        help='Manually set the repo_token of this project')
     args = parser.parse_args()
 
     yml = {}
@@ -55,7 +57,8 @@ def run():
         pass
     yml = yml or {}
 
-    args.repo_token = yml.get('repo_token', '')
+    if not args.repo_token:
+        args.repo_token = yml.get('repo_token', '')
     args.service_name = yml.get('service_name', 'travis-ci')
     args.service_job_id = os.environ.get('TRAVIS_JOB_ID', '')
 
