@@ -1,7 +1,13 @@
 language: python
+
 python:
-  - "2.7"
-#  - "3.2"
-#  - "3.3"
-install: "pip install -r requirements.txt --use-mirrors"
-script: nosetests
+    - "2.7"
+    - "pypy"
+    - "3.2"
+    - "3.3"
+
+install:
+    - python setup.py --quiet install
+
+script:
+    - ./test.bash
