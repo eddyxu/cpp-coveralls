@@ -45,7 +45,7 @@ def run():
                         help='Exclude file or directory.')
     parser.add_argument('--coveralls_yaml', '-y', default='.coveralls.yml',
                         help='coveralls yaml file name')
-    parser.add_argument('--repo_token', default='',
+    parser.add_argument('--repo_token', default='', metavar='TOKEN',
                         help='Manually set the repo_token of this project')
     args = parser.parse_args()
 
