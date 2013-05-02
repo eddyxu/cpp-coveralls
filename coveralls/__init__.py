@@ -1,7 +1,7 @@
 from __future__ import print_function
 
 __author__ = 'Lei Xu <eddyxu@gmail.com>'
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 __classifiers__ = [
     'Development Status :: 2 - Pre-Alpha',
@@ -45,7 +45,7 @@ def run():
                         help='Exclude file or directory.')
     parser.add_argument('-y', '--coveralls-yaml', default='.coveralls.yml',
                         help='coveralls yaml file name')
-    parser.add_argument('--repo_token', default='', metavar='TOKEN',
+    parser.add_argument('-t', '--repo_token', default='', metavar='TOKEN',
                         help='Manually set the repo_token of this project')
     parser.add_argument('--verbose', action='store_true',
                         help='print verbose messages')
