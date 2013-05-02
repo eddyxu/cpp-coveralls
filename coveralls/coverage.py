@@ -42,9 +42,8 @@ def collect(args):
     report = {}
     if args.repo_token:
         report['repo_token'] = args.repo_token
-    else:
-        report['service_name'] = args.service_name
-        report['service_job_id'] = args.service_job_id
+    report['service_name'] = args.service_name
+    report['service_job_id'] = args.service_job_id
 
     report['source_files'] = []
     for root, dirs, files in os.walk(args.root):
