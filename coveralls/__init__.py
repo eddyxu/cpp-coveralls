@@ -10,7 +10,9 @@ __classifiers__ = [
     'Operating System :: OS Independent',
     'Programming Language :: Python',
     'Topic :: Internet :: WWW/HTTP',
-    'Topic :: Software Development :: Libraries']
+    'Topic :: Software Development :: Libraries',
+    'Topic :: Software Development :: Quality Assurance',
+    'Topic :: Utilities']
 
 __copyright__ = '2013, %s ' % __author__
 __license__ = """
