@@ -19,6 +19,17 @@ def exclude_paths(args):
     return results
 
 
+def is_under_exclude_path(args, filepath):
+    """Returns true if the filepath is under the one of the exclude path
+    """
+    excl_paths = exclude_paths(args)
+    abspath = os.path.abspath(filepath)
+    for excluded_path in excl_paths:
+        relpath = os.path.relpath(abspath, excluded_path)
+        if len(relpath) > 3 and relpath[:3] != '../':
+            return True
+    return False
+
 def run_gcov(args):
     excl_paths = exclude_paths(args)
     for root, dirs, files in os.walk(args.root):
@@ -66,6 +77,8 @@ def collect(args):
                             os.path.join(root, source_file_path))
                     src_path = os.path.relpath(source_file_path, abs_root)
                     if len(src_path) > 3 and src_path[:3] == '../':
+                        continue
+                    if is_under_exclude_path(args, source_file_path):
                         continue
 
                     src_report = {}
