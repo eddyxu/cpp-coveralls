@@ -46,11 +46,13 @@ def run():
     parser.add_argument('-e', '--exclude', metavar='DIR|FILE', action='append',
                         help='Exclude file or directory.')
     parser.add_argument('-y', '--coveralls-yaml', default='.coveralls.yml',
-                        help='coveralls yaml file name')
+                        metavar='FILE',
+                        help='Coveralls yaml file name '
+                             '(default: .coveralls.yml).')
     parser.add_argument('-t', '--repo_token', default='', metavar='TOKEN',
-                        help='Manually set the repo_token of this project')
+                        help='Manually sets the repo_token of this project.')
     parser.add_argument('--verbose', action='store_true',
-                        help='print verbose messages')
+                        help='print verbose messages.')
     args = parser.parse_args()
 
     try:
