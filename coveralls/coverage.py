@@ -30,6 +30,7 @@ def is_under_exclude_path(args, filepath):
             return True
     return False
 
+
 def run_gcov(args):
     excl_paths = exclude_paths(args)
     for root, dirs, files in os.walk(args.root):
