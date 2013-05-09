@@ -40,19 +40,19 @@ def run():
 
     parser = argparse.ArgumentParser('coveralls')
     parser.add_argument('--gcov', metavar='FILE', default='gcov',
-                        help='Sets the location of gcov')
+                        help='set the location of gcov')
     parser.add_argument('-r', '--root', metavar='DIR', default='.',
-                        help='Sets the root directory')
+                        help='set the root directory')
     parser.add_argument('-e', '--exclude', metavar='DIR|FILE', action='append',
-                        help='Exclude file or directory.')
+                        help='set exclude file or directory')
     parser.add_argument('-y', '--coveralls-yaml', default='.coveralls.yml',
                         metavar='FILE',
-                        help='Coveralls yaml file name '
-                             '(default: .coveralls.yml).')
+                        help='coveralls yaml file name '
+                             '(default: .coveralls.yml)')
     parser.add_argument('-t', '--repo_token', default='', metavar='TOKEN',
-                        help='Manually sets the repo_token of this project.')
+                        help='set the repo_token of this project')
     parser.add_argument('--verbose', action='store_true',
-                        help='print verbose messages.')
+                        help='print verbose messages')
     args = parser.parse_args()
 
     try:
