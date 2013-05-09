@@ -1,10 +1,14 @@
-Upload C++/C coverage report to coveralls.io
+Upload C/C++ coverage report to coveralls.io
 =============
 
 [![Build Status](https://travis-ci.org/eddyxu/cpp-coveralls.png?branch=master)](https://travis-ci.org/eddyxu/cpp-coveralls)
 
 Inspired from [z4r/python-coveralls](https://github.com/z4r/python-coveralls), it uploads the coverage report of C/C++ project to [coveralls.io](https://coveralls.io/)
 
+# Features (0.0.5)
+ * Automatically run `gcov` against coverage reports and collect the data.
+ * Support any continuous integration platform and service (e.g. [Travis CI](https://travis-ci.org/) )
+ * Support "out of source builds" (e.g., CMake)
 
 # Instruction
 
