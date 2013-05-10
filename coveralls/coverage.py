@@ -57,6 +57,7 @@ def collect(args):
     report['service_name'] = args.service_name
     report['service_job_id'] = args.service_job_id
 
+    discoverd_files = set()
     report['source_files'] = []
     abs_root = os.path.abspath(args.root)
     for root, dirs, files in os.walk(args.root):
@@ -84,6 +85,7 @@ def collect(args):
 
                     src_report = {}
                     src_report['name'] = src_path
+                    discoverd_files.add(src_path)
                     with open(src_path) as src_file:
                         src_report['source'] = src_file.read()
 
@@ -110,6 +112,31 @@ def collect(args):
                             coverage.append(0)
                         else:
                             coverage.append(int(cov_num))
+                src_report['coverage'] = coverage
+                report['source_files'].append(src_report)
+
+    # Also collects the source files that have no coverage reports.
+    for root, dirs, files in os.walk(args.root):
+        filtered_dirs = []
+        for dirpath in dirs:
+            abspath = os.path.abspath(os.path.join(root, dirpath))
+            if not abspath in excl_paths:
+                filtered_dirs.append(dirpath)
+        dirs[:] = filtered_dirs
+
+        for filename in files:
+            if not is_source_file(filename):
+                continue
+            filepath = os.path.relpath(os.path.join(root, filename), abs_root)
+            if not filepath in discoverd_files:
+                src_report = {}
+                src_report['name'] = filepath
+                coverage = []
+                with open(filepath) as fobj:
+                    for line in fobj:
+                        coverage.append(None)
+                    fobj.seek(0)
+                    src_report['source'] = fobj.read()
                 src_report['coverage'] = coverage
                 report['source_files'].append(src_report)
     report['git'] = gitrepo.gitrepo('.')
