@@ -80,4 +80,4 @@ def run():
     cov_report = coverage.collect(args)
     if args.verbose:
         print(cov_report)
-    report.post_report(cov_report)
+    return report.post_report(cov_report)

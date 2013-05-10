@@ -17,3 +17,6 @@ def post_report(coverage):
                       'status': response.status_code,
                       'text': response.text}}
     print(result)
+    if 'error' in result:
+        return result['error']
+    return 0
