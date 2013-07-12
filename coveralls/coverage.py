@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+import re
 from coveralls import gitrepo
 
 
@@ -43,8 +44,12 @@ def run_gcov(args):
         for filepath in files:
             basename, ext = os.path.splitext(filepath)
             if ext == '.gcno':
-                subprocess.call('cd %s && %s %s' % (root, args.gcov, basename),
-                                shell=True)
+                if re.search(r".*\.c.*", basename):
+                      subprocess.call('cd %s && %s %s.o' % (root, args.gcov, basename),
+                                    shell=True) 
+		else:
+                    subprocess.call('cd %s && %s %s' % (root, args.gcov, basename),
+                                    shell=True)
 
 
 def collect(args):
