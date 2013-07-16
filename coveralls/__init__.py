@@ -1,7 +1,7 @@
 from __future__ import print_function
 
 __author__ = 'Lei Xu <eddyxu@gmail.com>'
-__version__ = '0.0.5'
+__version__ = '0.0.6'
 
 __classifiers__ = [
     'Development Status :: 2 - Pre-Alpha',
@@ -9,6 +9,7 @@ __classifiers__ = [
     'License :: OSI Approved :: Apache Software License',
     'Operating System :: OS Independent',
     'Programming Language :: Python',
+    'Programming Language :: Python :: 3',
     'Topic :: Internet :: WWW/HTTP',
     'Topic :: Software Development :: Libraries',
     'Topic :: Software Development :: Quality Assurance',
