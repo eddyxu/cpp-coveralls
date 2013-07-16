@@ -5,7 +5,7 @@ Upload C/C++ coverage report to coveralls.io
 
 Inspired from [z4r/python-coveralls](https://github.com/z4r/python-coveralls), it uploads the coverage report of C/C++ project to [coveralls.io](https://coveralls.io/)
 
-# Features (0.0.5)
+# Features (0.0.6)
  * Automatically run `gcov` against coverage reports and collect the data.
  * Support any continuous integration platform and service (e.g. [Travis CI](https://travis-ci.org/) )
  * Support "out of source builds" (e.g., CMake)
