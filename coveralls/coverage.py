@@ -45,11 +45,13 @@ def run_gcov(args):
             basename, ext = os.path.splitext(filepath)
             if ext == '.gcno':
                 if re.search(r".*\.c.*", basename):
-                    subprocess.call('cd %s && %s %s.o' % (root, args.gcov, basename),
-                                    shell=True) 
+                    subprocess.call(
+                        'cd %s && %s %s.o' % (root, args.gcov, basename),
+                        shell=True)
                 else:
-                    subprocess.call('cd %s && %s %s' % (root, args.gcov, basename),
-                                    shell=True)
+                    subprocess.call(
+                        'cd %s && %s %s' % (root, args.gcov, basename),
+                        shell=True)
 
 
 def collect(args):
