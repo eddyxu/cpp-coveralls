@@ -6,7 +6,7 @@ import re
 from coveralls import gitrepo
 
 
-def is_source_file(filepath):
+def is_source_file(args,filepath):
     """Returns true if it is a C++ source file."""
     if args.extension:
         return os.path.splitext(filepath)[1] in args.extension
