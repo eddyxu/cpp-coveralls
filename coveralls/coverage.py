@@ -8,7 +8,10 @@ from coveralls import gitrepo
 
 def is_source_file(filepath):
     """Returns true if it is a C++ source file."""
-    return os.path.splitext(filepath)[1] in ['.h', '.hpp', '.cpp', '.cc', '.c']
+    if args.extension:
+        return os.path.splitext(filepath)[1] in args.extension
+    else:
+        return os.path.splitext(filepath)[1] in ['.h', '.hpp', '.cpp', '.cc', '.c']
 
 
 def exclude_paths(args):
@@ -132,7 +135,7 @@ def collect(args):
         dirs[:] = filtered_dirs
 
         for filename in files:
-            if not is_source_file(filename):
+            if not is_source_file(args,filename):
                 continue
             filepath = os.path.relpath(os.path.join(root, filename), abs_root)
             if not filepath in discoverd_files:
