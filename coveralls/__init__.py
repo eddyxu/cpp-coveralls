@@ -46,6 +46,8 @@ def run():
                         help='set the root directory')
     parser.add_argument('-e', '--exclude', metavar='DIR|FILE', action='append',
                         help='set exclude file or directory')
+    parser.add_argument('-x', '--extension', metavar='EXTENSION', action='append',
+                        help='set extension of files to process')
     parser.add_argument('-y', '--coveralls-yaml', default='.coveralls.yml',
                         metavar='FILE',
                         help='coveralls yaml file name '
