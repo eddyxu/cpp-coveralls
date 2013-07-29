@@ -29,9 +29,14 @@ def is_under_exclude_path(args, filepath):
     excl_paths = exclude_paths(args)
     abspath = os.path.abspath(filepath)
     for excluded_path in excl_paths:
-        relpath = os.path.relpath(abspath, excluded_path)
-        if len(relpath) > 3 and relpath[:3] != '../':
-            return True
+        if os.path.isdir(excluded_path):
+            relpath = os.path.relpath(abspath, excluded_path)
+            if len(relpath) > 3 and relpath[:3] != '../':
+                return True
+        else:
+            absexcludefile = os.path.abspath(excluded_path)
+            if absexcludefile == abspath:
+                return True
     return False
 
 
@@ -136,6 +141,8 @@ def collect(args):
 
         for filename in files:
             if not is_source_file(args,filename):
+                continue
+            if is_under_exclude_path(args,filename):
                 continue
             filepath = os.path.relpath(os.path.join(root, filename), abs_root)
             if not filepath in discoverd_files:
