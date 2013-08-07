@@ -45,11 +45,11 @@ def gitrepo(self):
 
 
 def gitlog(format):
-    return str(git('--no-pager', 'log', '-1', '--pretty=format:%s' % format))
+    return git('--no-pager', 'log', '-1', '--pretty=format:%s' % format)
 
 
 def git(*arguments):
     """Return output from git."""
     process = subprocess.Popen(['git'] + list(arguments),
                                stdout=subprocess.PIPE)
-    return process.communicate()[0].decode(locale.getpreferredencoding(False))
+    return process.communicate()[0].decode('UTF-8')
