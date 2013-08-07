@@ -26,7 +26,7 @@ def exclude_paths(args):
     return results
 
 
-def is_under_exclude_path(args, filepath):
+def is_excluded_path(args, filepath):
     """Returns true if the filepath is under the one of the exclude path
     """
     excl_paths = exclude_paths(args)
@@ -98,7 +98,7 @@ def collect(args):
                     src_path = os.path.relpath(source_file_path, abs_root)
                     if len(src_path) > 3 and src_path[:3] == '../':
                         continue
-                    if is_under_exclude_path(args, source_file_path):
+                    if is_excluded_path(args, source_file_path):
                         continue
 
                     src_report = {}
@@ -145,7 +145,7 @@ def collect(args):
         for filename in files:
             if not is_source_file(args, filename):
                 continue
-            if is_under_exclude_path(args,filename):
+            if is_excluded_path(args, filename):
                 continue
             filepath = os.path.relpath(os.path.join(root, filename), abs_root)
             if not filepath in discoverd_files:
