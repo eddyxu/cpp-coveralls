@@ -15,20 +15,22 @@ Inspired from [z4r/python-coveralls](https://github.com/z4r/python-coveralls), i
 
 ```sh
 $ coveralls -h
-usage: coveralls [-h] [--gcov FILE] [-r DIR] [-e DIR|FILE] [-y FILE]
+usage: coveralls [-h] [--gcov FILE] [-r DIR] [-e DIR|FILE] [-x EXT] [-y FILE]
                  [-t TOKEN] [--verbose]
 
 optional arguments:
   -h, --help            show this help message and exit
-  --gcov FILE           Sets the location of gcov
-  -r DIR, --root DIR    Sets the root directory
+  --gcov FILE           set the location of gcov
+  -r DIR, --root DIR    set the root directory
   -e DIR|FILE, --exclude DIR|FILE
-                        Exclude file or directory.
+                        set exclude file or directory
+  -x EXT, --extension EXT
+                        set extension of files to process
   -y FILE, --coveralls-yaml FILE
-                        Coveralls yaml file name (default: .coveralls.yml).
+                        coveralls yaml file name (default: .coveralls.yml)
   -t TOKEN, --repo_token TOKEN
-                        Manually sets the repo_token of this project.
-  --verbose             print verbose messages.
+                        set the repo_token of this project
+  --verbose             print verbose messages
 ```
 
 ## Example `.travis.yml`
