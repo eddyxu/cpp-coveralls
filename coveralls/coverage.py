@@ -68,7 +68,7 @@ def run_gcov(args):
 def collect(args):
     """Collect coverage reports."""
     excl_paths = exclude_paths(args)
-    skip_dirs = set(['.git', '.svn', '.libs'])
+    skip_dirs = set(['.git', '.svn', '.libs', '.deps'])
 
     report = {}
     if args.repo_token:
