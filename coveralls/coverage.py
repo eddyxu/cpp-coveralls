@@ -21,7 +21,7 @@ def exclude_paths(args):
     """Returns the absolute paths for excluded path."""
     results = []
     if args.exclude:
-        for excl_path in args.exclude + ['.git', '.svn']:
+        for excl_path in args.exclude:
             results.append(os.path.abspath(os.path.join(args.root, excl_path)))
     return results
 
@@ -68,6 +68,7 @@ def run_gcov(args):
 def collect(args):
     """Collect coverage reports."""
     excl_paths = exclude_paths(args)
+    skip_dirs = set(['.git', '.svn', '.libs'])
 
     report = {}
     if args.repo_token:
@@ -82,6 +83,8 @@ def collect(args):
         filtered_dirs = []
         for dirpath in dirs:
             abspath = os.path.abspath(os.path.join(root, dirpath))
+            if os.path.basename(abspath) in skip_dirs:
+                continue
             if not abspath in excl_paths:
                 filtered_dirs.append(dirpath)
         dirs[:] = filtered_dirs
@@ -138,6 +141,8 @@ def collect(args):
         filtered_dirs = []
         for dirpath in dirs:
             abspath = os.path.abspath(os.path.join(root, dirpath))
+            if os.path.basename(abspath) in skip_dirs:
+                continue
             if not abspath in excl_paths:
                 filtered_dirs.append(dirpath)
         dirs[:] = filtered_dirs
