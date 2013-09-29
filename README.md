@@ -28,6 +28,7 @@ optional arguments:
                         set extension of files to process
   -y FILE, --coveralls-yaml FILE
                         coveralls yaml file name (default: .coveralls.yml)
+  -n, --no-gcov         do not run gcov.
   -t TOKEN, --repo_token TOKEN
                         set the repo_token of this project
   --verbose             print verbose messages
