@@ -1,5 +1,5 @@
 Version 0.0.9 ()
-  * Add `--no-gcov` parameter to disable running `gcov` by coveralls
+  * Add `-n/--no-gcov` parameter to disable running `gcov` by coveralls
 
 Version 0.0.8 (Sep 3th, 2013)
   * Skip '.libs' and '.deps' directories (#11 by @nijel)
