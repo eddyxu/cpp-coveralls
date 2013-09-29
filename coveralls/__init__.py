@@ -52,6 +52,8 @@ def run():
                         metavar='FILE',
                         help='coveralls yaml file name '
                              '(default: .coveralls.yml)')
+    parser.add_argument('-n', '--no-gcov', action='store_true', default=False,
+                        help='do not run gcov.')
     parser.add_argument('-t', '--repo_token', default='', metavar='TOKEN',
                         help='set the repo_token of this project')
     parser.add_argument('--verbose', action='store_true',
@@ -79,7 +81,8 @@ def run():
     args.service_name = yml.get('service_name', 'travis-ci')
     args.service_job_id = os.environ.get('TRAVIS_JOB_ID', '')
 
-    coverage.run_gcov(args)
+    if not args.no_gcov:
+        coverage.run_gcov(args)
     cov_report = coverage.collect(args)
     if args.verbose:
         print(cov_report)
