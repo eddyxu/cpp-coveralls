@@ -10,4 +10,5 @@ install:
     - python setup.py --quiet install
 
 script:
+    - nosetests
     - ./test.bash
