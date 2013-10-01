@@ -36,29 +36,10 @@ __license__ = """
 def run():
     """Run cpp coverage."""
     import os
-    import argparse
+    import sys
     from coveralls import coverage, report
 
-    parser = argparse.ArgumentParser('coveralls')
-    parser.add_argument('--gcov', metavar='FILE', default='gcov',
-                        help='set the location of gcov')
-    parser.add_argument('-r', '--root', metavar='DIR', default='.',
-                        help='set the root directory')
-    parser.add_argument('-e', '--exclude', metavar='DIR|FILE', action='append',
-                        help='set exclude file or directory')
-    parser.add_argument('-x', '--extension', metavar='EXT', action='append',
-                        help='set extension of files to process')
-    parser.add_argument('-y', '--coveralls-yaml', default='.coveralls.yml',
-                        metavar='FILE',
-                        help='coveralls yaml file name '
-                             '(default: .coveralls.yml)')
-    parser.add_argument('-n', '--no-gcov', action='store_true', default=False,
-                        help='do not run gcov.')
-    parser.add_argument('-t', '--repo_token', default='', metavar='TOKEN',
-                        help='set the repo_token of this project')
-    parser.add_argument('--verbose', action='store_true',
-                        help='print verbose messages')
-    args = parser.parse_args()
+    args = coverage.create_args(sys.argv)
 
     try:
         import yaml
