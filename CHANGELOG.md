@@ -1,5 +1,6 @@
-Version 0.0.9 ()
-  * Add `-n/--no-gcov` parameter to disable running `gcov` by coveralls
+Version 0.0.9 (Oct 1st, 2013)
+  * Add `-n/--no-gcov` parameter to disable running `gcov` by coveralls (#13)
+  * Add `-E/--exclude-pattern` to support use regular expression as exclude rules. (#12)
 
 Version 0.0.8 (Sep 3th, 2013)
   * Skip '.libs' and '.deps' directories (#11 by @nijel)
