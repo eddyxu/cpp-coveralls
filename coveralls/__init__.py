@@ -39,7 +39,7 @@ def run():
     import sys
     from coveralls import coverage, report
 
-    args = coverage.create_args(sys.argv)
+    args = coverage.create_args(sys.argv[1:])
 
     try:
         import yaml
