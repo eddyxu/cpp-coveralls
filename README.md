@@ -24,6 +24,8 @@ optional arguments:
   -r DIR, --root DIR    set the root directory
   -e DIR|FILE, --exclude DIR|FILE
                         set exclude file or directory
+  -E REGEXP, --exclude-pattern REGEXP
+                        set exclude file/directory pattern
   -x EXT, --extension EXT
                         set extension of files to process
   -y FILE, --coveralls-yaml FILE
