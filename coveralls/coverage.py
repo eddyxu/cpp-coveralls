@@ -4,9 +4,35 @@ import os
 import subprocess
 import re
 from coveralls import gitrepo
+import argparse
 
 
 _CPP_EXTENSIONS = ['.h', '.hpp', '.cpp', '.cc', 'c']
+
+def create_args(params):
+    parser = argparse.ArgumentParser('coveralls')
+    parser.add_argument('--gcov', metavar='FILE', default='gcov',
+                        help='set the location of gcov')
+    parser.add_argument('-r', '--root', metavar='DIR', default='.',
+                        help='set the root directory')
+    parser.add_argument('-e', '--exclude', metavar='DIR|FILE', action='append',
+                        help='set exclude file or directory')
+    parser.add_argument('-E', '--exclude-pattern', dest='regexp',
+                        action='append', metavar='REGEXP', default=[],
+                        help='set exclude file/directory pattern')
+    parser.add_argument('-x', '--extension', metavar='EXT', action='append',
+                        help='set extension of files to process')
+    parser.add_argument('-y', '--coveralls-yaml', default='.coveralls.yml',
+                        metavar='FILE',
+                        help='coveralls yaml file name '
+                             '(default: .coveralls.yml)')
+    parser.add_argument('-n', '--no-gcov', action='store_true', default=False,
+                        help='do not run gcov.')
+    parser.add_argument('-t', '--repo_token', default='', metavar='TOKEN',
+                        help='set the repo_token of this project')
+    parser.add_argument('--verbose', action='store_true',
+                        help='print verbose messages')
+    return parser.parse_args(params)
 
 
 def is_source_file(args, filepath):
@@ -30,6 +56,10 @@ def is_excluded_path(args, filepath):
     """Returns true if the filepath is under the one of the exclude path
     """
     excl_paths = exclude_paths(args)
+    # Try regular expressions first.
+    for regexp_exclude_path in args.regexp:
+        if re.match(regexp_exclude_path, filepath):
+            return True
     abspath = os.path.abspath(filepath)
     for excluded_path in excl_paths:
         if os.path.isdir(excluded_path):
