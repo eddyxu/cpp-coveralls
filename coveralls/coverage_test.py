@@ -2,7 +2,7 @@
 #
 # Copyright 2013 (c) Lei Xu <eddyxu@gmail.com>
 
-import coverage
+from . import coverage
 
 def test_exclude_pattern():
     """Test using regular expression for exclusion rules.
