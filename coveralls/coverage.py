@@ -17,6 +17,8 @@ def create_args(params):
                         help='give these options to gcov')
     parser.add_argument('-r', '--root', metavar='DIR', default='.',
                         help='set the root directory')
+    parser.add_argument('-b', '--build-root', metavar='DIR',
+                        help='set the directory from which gcov will be called. By default gcov is run in the directory of the .o files. However the paths of the sources are often relative to the directory from which the compiler was run and these relative paths are saved in the .o file. When this happens, gcov needs to run in the same directory as the compiler in order to find the source files.')
     parser.add_argument('-e', '--exclude', metavar='DIR|FILE', action='append',
                         help='set exclude file or directory')
     parser.add_argument('-E', '--exclude-pattern', dest='regexp',
@@ -34,6 +36,7 @@ def create_args(params):
                         help='set the repo_token of this project')
     parser.add_argument('--verbose', action='store_true',
                         help='print verbose messages')
+
     return parser.parse_args(params)
 
 
@@ -87,14 +90,34 @@ def run_gcov(args):
         for filepath in files:
             basename, ext = os.path.splitext(filepath)
             if ext == '.gcno':
+                gcov_root = root;
+                # if the build root is set, run gcov in it, else run gcov in the
+                # directories of the .o files
+                gcov_files = []
+                if args.build_root:
+                    gcov_root = args.build_root
+                    # list current gcov files in build root. We want to move only
+                    # the one we will generate now
+                    for files in os.listdir(args.build_root):
+                        if files.endswith(".gcov"):
+                            gcov_files.append(files)
                 if re.search(r".*\.c.*", basename):
+                    path = os.path.abspath(os.path.join(root,basename + '.o'))
                     subprocess.call(
-                        'cd %s && %s %s %s.o' % (root, args.gcov, args.gcov_options, basename),
+                        'cd %s && %s %s %s' % (gcov_root, args.gcov, args.gcov_options, path),
                         shell=True)
                 else:
+                    path = os.path.abspath(os.path.join(root,basename))
                     subprocess.call(
-                        'cd %s && %s %s %s' % (root, args.gcov, args.gcov_options, basename),
+                        'cd %s && %s %s %s' % (gcov_root, args.gcov, args.gcov_options, path),
                         shell=True)
+                # if gcov was run in the build root move the resulting gcov file to the same
+                # directory as the .o file
+                if args.build_root:
+                    for files in os.listdir(args.build_root):
+                        if files.endswith(".gcov") and files not in gcov_files:
+                            os.rename(os.path.join(args.build_root, files),
+                                    os.path.join(root, files))
 
 
 def collect(args):
@@ -128,8 +151,11 @@ def collect(args):
                     source_file_line = fobj.readline()
                     source_file_path = source_file_line.split(':')[-1].strip()
                     if not os.path.isabs(source_file_path):
-                        source_file_path = os.path.abspath(
-                            os.path.join(root, source_file_path))
+                        if (args.build_root):
+                            source_file_path = os.path.join(args.build_root, source_file_path)
+                        else:
+                            source_file_path = os.path.abspath(
+                                os.path.join(root, source_file_path))
                     src_path = os.path.relpath(source_file_path, abs_root)
                     if len(src_path) > 3 and src_path[:3] == '../':
                         continue
