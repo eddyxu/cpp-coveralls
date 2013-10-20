@@ -13,6 +13,8 @@ def create_args(params):
     parser = argparse.ArgumentParser('coveralls')
     parser.add_argument('--gcov', metavar='FILE', default='gcov',
                         help='set the location of gcov')
+    parser.add_argument('--gcov-options', metavar="GCOV_OPTS",
+                        help='give these options to gcov')
     parser.add_argument('-r', '--root', metavar='DIR', default='.',
                         help='set the root directory')
     parser.add_argument('-e', '--exclude', metavar='DIR|FILE', action='append',
@@ -87,11 +89,11 @@ def run_gcov(args):
             if ext == '.gcno':
                 if re.search(r".*\.c.*", basename):
                     subprocess.call(
-                        'cd %s && %s %s.o' % (root, args.gcov, basename),
+                        'cd %s && %s %s %s.o' % (root, args.gcov, args.gcov_options, basename),
                         shell=True)
                 else:
                     subprocess.call(
-                        'cd %s && %s %s' % (root, args.gcov, basename),
+                        'cd %s && %s %s %s' % (root, args.gcov, args.gcov_options, basename),
                         shell=True)
 
 
