@@ -13,7 +13,7 @@ def create_args(params):
     parser = argparse.ArgumentParser('coveralls')
     parser.add_argument('--gcov', metavar='FILE', default='gcov',
                         help='set the location of gcov')
-    parser.add_argument('--gcov-options', metavar="GCOV_OPTS",
+    parser.add_argument('--gcov-options', metavar="GCOV_OPTS", default='',
                         help='give these options to gcov')
     parser.add_argument('-r', '--root', metavar='DIR', default='.',
                         help='set the root directory')
@@ -96,6 +96,7 @@ def run_gcov(args):
                 gcov_files = []
                 if args.build_root:
                     gcov_root = args.build_root
+                    args.gcov_options = args.gcov_options + ' --object-directory ' + os.path.abspath(root)
                     # list current gcov files in build root. We want to move only
                     # the one we will generate now
                     for files in os.listdir(args.build_root):
