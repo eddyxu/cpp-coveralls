@@ -14,7 +14,7 @@ def create_args(params):
     parser.add_argument('--gcov', metavar='FILE', default='gcov',
                         help='set the location of gcov')
     parser.add_argument('--gcov-options', metavar="GCOV_OPTS", default='',
-                        help='give these options to gcov')
+                        help='set the options given to gcov')
     parser.add_argument('-r', '--root', metavar='DIR', default='.',
                         help='set the root directory')
     parser.add_argument('-b', '--build-root', metavar='DIR',
