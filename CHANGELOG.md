@@ -1,3 +1,6 @@
+Version 0.1.0 (Oct 21th, 2013)
+  * Enable the use of a build directory and add access to gcov options (#14 by @nharraud)
+
 Version 0.0.9 (Oct 1st, 2013)
   * Add `-n/--no-gcov` parameter to disable running `gcov` by coveralls (#13)
   * Add `-E/--exclude-pattern` to support use regular expression as exclude rules. (#12)
