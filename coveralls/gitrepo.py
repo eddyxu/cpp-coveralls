@@ -1,4 +1,3 @@
-import locale
 import os
 import subprocess
 
@@ -44,8 +43,8 @@ def gitrepo(self):
     }
 
 
-def gitlog(format):
-    return git('--no-pager', 'log', '-1', '--pretty=format:%s' % format)
+def gitlog(fmt):
+    return git('--no-pager', 'log', '-1', '--pretty=format:%s' % fmt)
 
 
 def git(*arguments):
