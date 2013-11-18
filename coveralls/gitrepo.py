@@ -51,4 +51,10 @@ def git(*arguments):
     """Return output from git."""
     process = subprocess.Popen(['git'] + list(arguments),
                                stdout=subprocess.PIPE)
-    return process.communicate()[0].decode('UTF-8')
+    codecs =  ['utf_8', 'euc_jp', 'shift_jis', 'iso2022jp', 'cp1252',
+            'big5', 'gb2312', 'euc-kr', 'latin_1', 'ascii']
+    for i in codecs:
+        try:
+            return process.communicate()[0].decode(i)
+        except:
+            pass
