@@ -2,7 +2,7 @@ import os
 import subprocess
 
 
-def gitrepo(self):
+def gitrepo(cwd):
     """Return hash of Git data that can be used to display more information to
     users.
 
@@ -26,29 +26,35 @@ def gitrepo(self):
     From https://github.com/coagulant/coveralls-python (with MIT license).
 
     """
+    repo = Repository(cwd)
 
     return {
         'head': {
-            'id': gitlog('%H'),
-            'author_name': gitlog('%aN'),
-            'author_email': gitlog('%ae'),
-            'committer_name': gitlog('%cN'),
-            'committer_email': gitlog('%ce'),
-            'message': gitlog('%s')
+            'id': repo.gitlog('%H'),
+            'author_name': repo.gitlog('%aN'),
+            'author_email': repo.gitlog('%ae'),
+            'committer_name': repo.gitlog('%cN'),
+            'committer_email': repo.gitlog('%ce'),
+            'message': repo.gitlog('%s')
         },
-        'branch': os.environ.get('TRAVIS_BRANCH', git(
+        'branch': os.environ.get('TRAVIS_BRANCH', repo.git(
             'rev-parse', '--abbrev-ref', 'HEAD').strip()),
         'remotes': [{'name': line.split()[0], 'url': line.split()[1]}
-                    for line in git('remote', '-v') if '(fetch)' in line]
+                    for line in repo.git('remote', '-v') if '(fetch)' in line]
     }
 
 
-def gitlog(fmt):
-    return git('--no-pager', 'log', '-1', '--pretty=format:%s' % fmt)
+class Repository(object):
 
+    def __init__(self, cwd):
+        self.cwd = cwd
 
-def git(*arguments):
-    """Return output from git."""
-    process = subprocess.Popen(['git'] + list(arguments),
-                               stdout=subprocess.PIPE)
-    return process.communicate()[0].decode('UTF-8')
+    def gitlog(self, fmt):
+        return self.git('--no-pager', 'log', '-1', '--pretty=format:%s' % fmt)
+
+    def git(self, *arguments):
+        """Return output from git."""
+        process = subprocess.Popen(['git'] + list(arguments),
+                                   stdout=subprocess.PIPE,
+                                   cwd=self.cwd)
+        return process.communicate()[0].decode('UTF-8')
