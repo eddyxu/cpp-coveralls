@@ -1,7 +1,7 @@
 from __future__ import print_function
 
 __author__ = 'Lei Xu <eddyxu@gmail.com>'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 __classifiers__ = [
     'Development Status :: 2 - Pre-Alpha',

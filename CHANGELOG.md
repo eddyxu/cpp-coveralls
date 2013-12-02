@@ -1,3 +1,6 @@
+Version 0.1.1 (Dec 2nd, 2013)
+  * Fixed unused argument (#16 by @myint)
+
 Version 0.1.0 (Oct 21th, 2013)
   * Enable the use of a build directory and add access to gcov options (#14 by @nharraud)
 
