@@ -41,7 +41,8 @@ def create_args(params):
                              '(default: .coveralls.yml)')
     parser.add_argument('-n', '--no-gcov', action='store_true', default=False,
                         help='do not run gcov')
-    parser.add_argument('-t', '--repo_token', default='', metavar='TOKEN',
+    parser.add_argument('-t', '--repo-token', '--repo_token', default='',
+                        metavar='TOKEN',
                         help='set the repo_token of this project')
     parser.add_argument('--verbose', action='store_true',
                         help='print verbose messages')
