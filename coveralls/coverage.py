@@ -1,10 +1,13 @@
 # Copyright 2013 (c) Lei Xu <eddyxu@gmail.com>
 
-import os
-import subprocess
-import re
-from coveralls import gitrepo
+from __future__ import absolute_import
+
 import argparse
+import os
+import re
+import subprocess
+
+from . import gitrepo
 
 
 _CPP_EXTENSIONS = ['.h', '.hpp', '.cpp', '.cc', 'c']
