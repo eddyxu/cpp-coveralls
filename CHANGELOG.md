@@ -1,3 +1,8 @@
+Version 0.1.2 (Dec 7th, 2013)
+  * Allow specifying encoding from command line (#17 by @myint)
+  * Added `--repo-token` for consistency (#17 by @myint)
+  * Format to follow PEP8 and use relative imports (#17 by @myint)
+
 Version 0.1.1 (Dec 2nd, 2013)
   * Fixed unused argument (#16 by @myint)
 
