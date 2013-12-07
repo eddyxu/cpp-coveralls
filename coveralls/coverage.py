@@ -9,16 +9,25 @@ import argparse
 
 _CPP_EXTENSIONS = ['.h', '.hpp', '.cpp', '.cc', 'c']
 
+
 def create_args(params):
     parser = argparse.ArgumentParser('coveralls')
     parser.add_argument('--gcov', metavar='FILE', default='gcov',
                         help='set the location of gcov')
-    parser.add_argument('--gcov-options', metavar="GCOV_OPTS", default='',
+    parser.add_argument('--gcov-options', metavar='GCOV_OPTS', default='',
                         help='set the options given to gcov')
     parser.add_argument('-r', '--root', metavar='DIR', default='.',
                         help='set the root directory')
     parser.add_argument('-b', '--build-root', metavar='DIR',
-                        help='set the directory from which gcov will be called. By default gcov is run in the directory of the .o files. However the paths of the sources are often relative to the directory from which the compiler was run and these relative paths are saved in the .o file. When this happens, gcov needs to run in the same directory as the compiler in order to find the source files.')
+                        help='set the directory from which gcov will '
+                             'be called; by default gcov is run in the '
+                             'directory of the .o files; however the paths '
+                             'of the sources are often relative to the '
+                             'directory from which the compiler was run and '
+                             'these relative paths are saved in the .o '
+                             'file; when this happens, gcov needs to run in '
+                             'the same directory as the compiler in order '
+                             'to find the source files')
     parser.add_argument('-e', '--exclude', metavar='DIR|FILE', action='append',
                         help='set exclude file or directory')
     parser.add_argument('-E', '--exclude-pattern', dest='regexp',
@@ -31,7 +40,7 @@ def create_args(params):
                         help='coveralls yaml file name '
                              '(default: .coveralls.yml)')
     parser.add_argument('-n', '--no-gcov', action='store_true', default=False,
-                        help='do not run gcov.')
+                        help='do not run gcov')
     parser.add_argument('-t', '--repo_token', default='', metavar='TOKEN',
                         help='set the repo_token of this project')
     parser.add_argument('--verbose', action='store_true',
@@ -58,8 +67,7 @@ def exclude_paths(args):
 
 
 def is_excluded_path(args, filepath):
-    """Returns true if the filepath is under the one of the exclude path
-    """
+    """Returns true if the filepath is under the one of the exclude path."""
     excl_paths = exclude_paths(args)
     # Try regular expressions first.
     for regexp_exclude_path in args.regexp:
@@ -90,35 +98,38 @@ def run_gcov(args):
         for filepath in files:
             basename, ext = os.path.splitext(filepath)
             if ext == '.gcno':
-                gcov_root = root;
-                # if the build root is set, run gcov in it, else run gcov in the
-                # directories of the .o files
+                gcov_root = root
+                # If the build root is set, run gcov in it, else run gcov in
+                # the directories of the .o files.
                 gcov_files = []
                 if args.build_root:
                     gcov_root = args.build_root
-                    args.gcov_options = args.gcov_options + ' --object-directory ' + os.path.abspath(root)
-                    # list current gcov files in build root. We want to move only
-                    # the one we will generate now
+                    args.gcov_options = args.gcov_options + \
+                        ' --object-directory ' + os.path.abspath(root)
+                    # List current gcov files in build root. We want to move
+                    # only the one we will generate now.
                     for files in os.listdir(args.build_root):
-                        if files.endswith(".gcov"):
+                        if files.endswith('.gcov'):
                             gcov_files.append(files)
                 if re.search(r".*\.c.*", basename):
-                    path = os.path.abspath(os.path.join(root,basename + '.o'))
+                    path = os.path.abspath(os.path.join(root, basename + '.o'))
                     subprocess.call(
-                        'cd %s && %s %s %s' % (gcov_root, args.gcov, args.gcov_options, path),
+                        'cd %s && %s %s %s' % (
+                            gcov_root, args.gcov, args.gcov_options, path),
                         shell=True)
                 else:
-                    path = os.path.abspath(os.path.join(root,basename))
+                    path = os.path.abspath(os.path.join(root, basename))
                     subprocess.call(
-                        'cd %s && %s %s %s' % (gcov_root, args.gcov, args.gcov_options, path),
+                        'cd %s && %s %s %s' % (
+                            gcov_root, args.gcov, args.gcov_options, path),
                         shell=True)
-                # if gcov was run in the build root move the resulting gcov file to the same
-                # directory as the .o file
+                # If gcov was run in the build root move the resulting gcov
+                # file to the same directory as the .o file.
                 if args.build_root:
                     for files in os.listdir(args.build_root):
-                        if files.endswith(".gcov") and files not in gcov_files:
+                        if files.endswith('.gcov') and files not in gcov_files:
                             os.rename(os.path.join(args.build_root, files),
-                                    os.path.join(root, files))
+                                      os.path.join(root, files))
 
 
 def collect(args):
@@ -153,7 +164,8 @@ def collect(args):
                     source_file_path = source_file_line.split(':')[-1].strip()
                     if not os.path.isabs(source_file_path):
                         if (args.build_root):
-                            source_file_path = os.path.join(args.build_root, source_file_path)
+                            source_file_path = os.path.join(
+                                args.build_root, source_file_path)
                         else:
                             source_file_path = os.path.abspath(
                                 os.path.join(root, source_file_path))
