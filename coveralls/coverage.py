@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 
 import argparse
+import io
 import os
 import re
 import subprocess
@@ -47,6 +48,8 @@ def create_args(params):
     parser.add_argument('-t', '--repo-token', '--repo_token', default='',
                         metavar='TOKEN',
                         help='set the repo_token of this project')
+    parser.add_argument('--encoding', default='utf-8',
+                        help='source encoding (default: %(default)s)')
     parser.add_argument('--verbose', action='store_true',
                         help='print verbose messages')
 
@@ -182,7 +185,7 @@ def collect(args):
                     src_report = {}
                     src_report['name'] = src_path
                     discoverd_files.add(src_path)
-                    with open(src_path) as src_file:
+                    with io.open(src_path, encoding=args.encoding) as src_file:
                         src_report['source'] = src_file.read()
 
                     coverage = []
@@ -232,7 +235,7 @@ def collect(args):
                 src_report = {}
                 src_report['name'] = filepath
                 coverage = []
-                with open(filepath) as fobj:
+                with io.open(filepath, encoding=args.encoding) as fobj:
                     for line in fobj:
                         coverage.append(None)
                     fobj.seek(0)
