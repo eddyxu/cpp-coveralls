@@ -42,8 +42,9 @@ optional arguments:
   -y FILE, --coveralls-yaml FILE
                         coveralls yaml file name (default: .coveralls.yml)
   -n, --no-gcov         do not run gcov.
-  -t TOKEN, --repo_token TOKEN
-                        set the repo_token of this project
+  -t TOKEN, --repo-token TOKEN, --repo_token TOKEN
+						set the repo_token of this project
+  --encoding ENCODING   source encoding (default: utf-8)
   --verbose             print verbose messages
 ```
 
