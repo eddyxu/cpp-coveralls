@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from __future__ import print_function
 
 __author__ = 'Lei Xu <eddyxu@gmail.com>'
@@ -37,7 +38,7 @@ def run():
     """Run cpp coverage."""
     import os
     import sys
-    from coveralls import coverage, report
+    from . import coverage, report
 
     args = coverage.create_args(sys.argv[1:])
 
