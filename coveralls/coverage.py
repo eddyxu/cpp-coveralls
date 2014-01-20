@@ -228,9 +228,10 @@ def collect(args):
         for filename in files:
             if not is_source_file(args, filename):
                 continue
-            if is_excluded_path(args, filename):
+            abs_filepath = os.path.join(abs_root, filename)
+            if is_excluded_path(args, abs_filepath):
                 continue
-            filepath = os.path.relpath(os.path.join(root, filename), abs_root)
+            filepath = os.path.relpath(abs_filepath, abs_root)
             if not filepath in discoverd_files:
                 src_report = {}
                 src_report['name'] = filepath
