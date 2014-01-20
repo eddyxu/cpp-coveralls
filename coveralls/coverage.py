@@ -228,7 +228,7 @@ def collect(args):
         for filename in files:
             if not is_source_file(args, filename):
                 continue
-            abs_filepath = os.path.join(abs_root, filename)
+            abs_filepath = os.path.join(os.path.abspath(root), filename)
             if is_excluded_path(args, abs_filepath):
                 continue
             filepath = os.path.relpath(abs_filepath, abs_root)
