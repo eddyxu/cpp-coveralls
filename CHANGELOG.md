@@ -1,3 +1,7 @@
+Version 0.1.3 (Jan 19th, 2014)
+  * Update USAGE in README.md
+  * FIXED: Filter paths consistently for executed and unexecuted files. (#19,#20,#21 by @smspillaz)
+
 Version 0.1.2 (Dec 7th, 2013)
   * Allow specifying encoding from command line (#17 by @myint)
   * Added `--repo-token` for consistency (#17 by @myint)
