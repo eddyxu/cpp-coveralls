@@ -92,6 +92,15 @@ def is_excluded_path(args, filepath):
                 return True
     return False
 
+def is_libtool_dir(dir_path):
+    return os.path.basename(dir_path) == ".libs"
+
+def libtool_dir_to_source_dir(dir_path):
+    return os.path.dirname(dir_path)
+
+def libtool_source_file_path(dir_path, source_file_path):
+    source_dir_path = libtool_dir_to_source_dir(dir_path)
+    return os.path.join(source_dir_path, source_file_path)
 
 def run_gcov(args):
     excl_paths = exclude_paths(args)
@@ -102,6 +111,7 @@ def run_gcov(args):
             if not abspath in excl_paths:
                 filtered_dirs.append(dirpath)
         dirs[:] = filtered_dirs
+        root_is_libtool_dir = is_libtool_dir(root)
         for filepath in files:
             basename, ext = os.path.splitext(filepath)
             if ext == '.gcno':
@@ -109,13 +119,16 @@ def run_gcov(args):
                 # If the build root is set, run gcov in it, else run gcov in
                 # the directories of the .o files.
                 gcov_files = []
-                if args.build_root:
-                    gcov_root = args.build_root
+                custom_gcov_root = args.build_root
+                if not custom_gcov_root and root_is_libtool_dir:
+                    custom_gcov_root = libtool_dir_to_source_dir(root)
+                if custom_gcov_root:
+                    gcov_root = custom_gcov_root
                     args.gcov_options = args.gcov_options + \
                         ' --object-directory ' + os.path.abspath(root)
                     # List current gcov files in build root. We want to move
                     # only the one we will generate now.
-                    for files in os.listdir(args.build_root):
+                    for files in os.listdir(custom_gcov_root):
                         if files.endswith('.gcov'):
                             gcov_files.append(files)
                 if re.search(r".*\.c.*", basename):
@@ -128,21 +141,21 @@ def run_gcov(args):
                     path = os.path.abspath(os.path.join(root, basename))
                     subprocess.call(
                         'cd %s && %s %s %s' % (
-                            gcov_root, args.gcov, args.gcov_options, path),
+                            gcov_root, args.gcov, args.gcov_options, filepath),
                         shell=True)
                 # If gcov was run in the build root move the resulting gcov
                 # file to the same directory as the .o file.
-                if args.build_root:
-                    for files in os.listdir(args.build_root):
+                if custom_gcov_root:
+                    for files in os.listdir(custom_gcov_root):
                         if files.endswith('.gcov') and files not in gcov_files:
-                            os.rename(os.path.join(args.build_root, files),
+                            os.rename(os.path.join(custom_gcov_root, files),
                                       os.path.join(root, files))
 
 
 def collect(args):
     """Collect coverage reports."""
     excl_paths = exclude_paths(args)
-    skip_dirs = set(['.git', '.svn', '.libs', '.deps'])
+    skip_dirs = set(['.git', '.svn', '.deps'])
 
     report = {}
     if args.repo_token:
@@ -163,6 +176,7 @@ def collect(args):
                 filtered_dirs.append(dirpath)
         dirs[:] = filtered_dirs
 
+        root_is_libtool_dir = is_libtool_dir(root)
         for filepath in files:
             if os.path.splitext(filepath)[1] == '.gcov':
                 gcov_path = os.path.join(os.path.join(root, filepath))
@@ -173,6 +187,9 @@ def collect(args):
                         if (args.build_root):
                             source_file_path = os.path.join(
                                 args.build_root, source_file_path)
+                        elif root_is_libtool_dir:
+                            source_file_path = os.path.abspath(
+                                libtool_source_file_path(root, source_file_path))
                         else:
                             source_file_path = os.path.abspath(
                                 os.path.join(root, source_file_path))
