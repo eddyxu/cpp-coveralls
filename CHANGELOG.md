@@ -1,3 +1,6 @@
+Version 0.1.4 (Jan 26th, 2014)
+  * Support GNU Libtool (#23 by @kou)
+
 Version 0.1.3 (Jan 19th, 2014)
   * Update USAGE in README.md
   * FIXED: Filter paths consistently for executed and unexecuted files. (#19,#20,#21 by @smspillaz)
