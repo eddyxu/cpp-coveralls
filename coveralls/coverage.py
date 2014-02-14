@@ -11,7 +11,7 @@ import subprocess
 from . import gitrepo
 
 
-_CPP_EXTENSIONS = ['.h', '.hpp', '.cpp', '.cc', 'c']
+_CPP_EXTENSIONS = ['.h', '.hpp', '.cpp', '.cc', '.c']
 
 
 def create_args(params):
