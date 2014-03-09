@@ -70,15 +70,15 @@ after_success:
 *Python* on *MacOS* can be a bit of a hassle so you need to install to set up your custom environment:
 
 ```
-language: cpp
+language: objective-c
 compiler:
   - gcc
 before_install:
   - brew update
   - brew install pyenv
   - eval "$(pyenv init -)"
-  - pyenv install 2.7.2
-  - pyenv local 2.7.2
+  - pyenv install 2.7.6
+  - pyenv glocal 2.7.6
   - pyenv rehash
   - pip install cpp-coveralls
   - pyenv rehash
