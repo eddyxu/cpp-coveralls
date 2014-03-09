@@ -1,3 +1,8 @@
+Version 0.1.5 (March 9th, 2014)
+  * Respect "LCOV_EXCL_LINE" exclusions (#30 by @myint)
+  * Added MacOSX special instructions in README (#27,#28 by @MartinDelille)
+  * Fix file extension for `.c` file (#25 by @kt3k)
+
 Version 0.1.4 (Jan 26th, 2014)
   * Support GNU Libtool (#23 by @kou)
 
