@@ -50,6 +50,9 @@ optional arguments:
 
 ## Example `.travis.yml`
 
+### Linux
+
+Install `cpp-coveralls` with `pip`, add *gcov* to your compilation option, compile, run your test and send the result to http://coveralls.io :
 ```
 language: cpp
 compiler:
@@ -61,3 +64,27 @@ script:
 after_success:
   - coveralls --exclude lib --exclude tests
 ```
+
+### MacOS X
+
+*Python* on *MacOS* can be a bit of a hassle so you need to install to set up your custom environment:
+
+```
+language: cpp
+compiler:
+  - gcc
+before_install:
+  - brew update
+  - brew install pyenv
+  - eval "$(pyenv init -)"
+  - pyenv install 2.7.2
+  - pyenv local 2.7.2
+  - pyenv rehash
+  - pip install cpp-coveralls
+  - pyenv rehash
+script:
+  - ./configure --enable-gcov && make && make check
+after_success:
+  - coveralls --exclude lib --exclude tests
+```
+
