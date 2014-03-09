@@ -217,8 +217,11 @@ def collect(args):
                             coverage.append(None)
                         elif cov_num == '#####':
                             # Avoid false positives.
-                            if (text.lstrip().startswith('static') or
-                                    text.strip() == '}'):
+                            if (
+                                text.lstrip().startswith('static') or
+                                text.strip() == '}' or
+                                re.match(r'.*//\s*LCOV_EXCL_LINE\s*', text)
+                            ):
                                 coverage.append(None)
                             else:
                                 coverage.append(0)
