@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 __author__ = 'Lei Xu <eddyxu@gmail.com>'
-__version__ = '0.1.4'
+__version__ = '0.1.5'
 
 __classifiers__ = [
     'Development Status :: 2 - Pre-Alpha',
