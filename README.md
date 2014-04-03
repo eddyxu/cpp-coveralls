@@ -65,9 +65,9 @@ after_success:
   - coveralls --exclude lib --exclude tests
 ```
 
-### MacOS X
+### OS X
 
-*Python* on *MacOS* can be a bit of a hassle so you need to install to set up your custom environment:
+*Python* on *OS X* can be a bit of a hassle so you need to install to set up your custom environment:
 
 ```
 language: objective-c
