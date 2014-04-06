@@ -68,4 +68,6 @@ def run():
     cov_report = coverage.collect(args)
     if args.verbose:
         print(cov_report)
+    if args.dryrun:
+        return 0
     return report.post_report(cov_report)
