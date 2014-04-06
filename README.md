@@ -21,6 +21,8 @@ usage: coveralls [-h] [--gcov FILE] [--gcov-options GCOV_OPTS] [-r DIR]
 
 optional arguments:
   -h, --help            show this help message and exit
+  --verbose             print verbose messages
+  --dryrun              run coveralls without uploading report
   --gcov FILE           set the location of gcov
   --gcov-options GCOV_OPTS
                         set the options given to gcov
@@ -45,7 +47,6 @@ optional arguments:
   -t TOKEN, --repo-token TOKEN, --repo_token TOKEN
 						set the repo_token of this project
   --encoding ENCODING   source encoding (default: utf-8)
-  --verbose             print verbose messages
 ```
 
 ## Example `.travis.yml`
@@ -87,4 +88,3 @@ script:
 after_success:
   - coveralls --exclude lib --exclude tests
 ```
-
