@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 __author__ = 'Lei Xu <eddyxu@gmail.com>'
-__version__ = '0.1.5'
+__version__ = '0.1.6'
 
 __classifiers__ = [
     'Development Status :: 2 - Pre-Alpha',
@@ -16,7 +16,7 @@ __classifiers__ = [
     'Topic :: Software Development :: Quality Assurance',
     'Topic :: Utilities']
 
-__copyright__ = '2013, %s ' % __author__
+__copyright__ = '2014, %s ' % __author__
 __license__ = """
     Copyright %s.
 

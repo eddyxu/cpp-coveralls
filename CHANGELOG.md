@@ -1,3 +1,7 @@
+Version 0.1.6 (April 6th, 2014)
+  * Added a `--dryrun` parameter (#36)
+  * Fixed a typo in OS X instructions (#34 by @myint)
+
 Version 0.1.5 (March 9th, 2014)
   * Respect "LCOV_EXCL_LINE" exclusions (#30 by @myint)
   * Added MacOSX special instructions in README (#27,#28 by @MartinDelille)
