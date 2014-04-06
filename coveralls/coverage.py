@@ -16,6 +16,10 @@ _CPP_EXTENSIONS = ['.h', '.hpp', '.cpp', '.cc', '.c']
 
 def create_args(params):
     parser = argparse.ArgumentParser('coveralls')
+    parser.add_argument('--verbose', action='store_true',
+                        help='print verbose messages')
+    parser.add_argument('--dryrun', action='store_true',
+                        help='run coveralls without uploading report')
     parser.add_argument('--gcov', metavar='FILE', default='gcov',
                         help='set the location of gcov')
     parser.add_argument('--gcov-options', metavar='GCOV_OPTS', default='',
@@ -50,8 +54,6 @@ def create_args(params):
                         help='set the repo_token of this project')
     parser.add_argument('--encoding', default='utf-8',
                         help='source encoding (default: %(default)s)')
-    parser.add_argument('--verbose', action='store_true',
-                        help='print verbose messages')
 
     return parser.parse_args(params)
 
