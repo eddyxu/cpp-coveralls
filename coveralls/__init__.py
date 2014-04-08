@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 __author__ = 'Lei Xu <eddyxu@gmail.com>'
-__version__ = '0.1.6'
+__version__ = '0.1.7'
 
 __classifiers__ = [
     'Development Status :: 2 - Pre-Alpha',
@@ -36,6 +36,7 @@ __license__ = """
 
 def run():
     """Run cpp coverage."""
+    import json
     import os
     import sys
     from . import coverage, report
@@ -70,4 +71,8 @@ def run():
         print(cov_report)
     if args.dryrun:
         return 0
+    if args.dump:
+        args.dump.write(json.dumps(cov_report))
+        return 0
+
     return report.post_report(cov_report)

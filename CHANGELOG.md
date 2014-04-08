@@ -1,3 +1,7 @@
+Version 0.1.7 (April 8th, 2014)
+  * Added an alias `cpp-coveralls` to support using it for multiple languages. (#35)
+  * Added `--dump` parameter to write JSON payload to output file instead of uploading to coveralls.(#35)
+
 Version 0.1.6 (April 6th, 2014)
   * Added a `--dryrun` parameter (#36)
   * Fixed a typo in OS X instructions (#34 by @myint)

@@ -54,6 +54,9 @@ def create_args(params):
                         help='set the repo_token of this project')
     parser.add_argument('--encoding', default='utf-8',
                         help='source encoding (default: %(default)s)')
+    parser.add_argument('--dump', nargs='?', type=argparse.FileType('w'),
+                        help='dump JSON payload to a file',
+                        default=None, metavar='FILE')
 
     return parser.parse_args(params)
 

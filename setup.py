@@ -45,6 +45,7 @@ setup(
     entry_points={
         'console_scripts': [
             'coveralls = coveralls:run',
+            'cpp-coveralls = coveralls:run',
         ],
     },
 )
