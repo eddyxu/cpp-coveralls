@@ -59,7 +59,7 @@ language: cpp
 compiler:
   - gcc
 before_install:
-  - sudo pip install cpp-coveralls --use-mirrors
+  - sudo pip install cpp-coveralls
 script:
   - ./configure --enable-gcov && make && make check
 after_success:
