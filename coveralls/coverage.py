@@ -112,15 +112,25 @@ def libtool_source_file_path(dir_path, source_file_path):
     return os.path.join(source_dir_path, source_file_path)
 
 
+def filter_dirs(root, dirs, excl_paths):
+    """Filter directory paths based on the exclusion rules defined in
+    'excl_paths'.
+    """
+    filtered_dirs = []
+    for dirpath in dirs:
+        abspath = os.path.abspath(os.path.join(root, dirpath))
+        if os.path.basename(abspath) in _SKIP_DIRS:
+            continue
+        if abspath not in excl_paths:
+            filtered_dirs.append(dirpath)
+    return filtered_dirs
+
+
 def run_gcov(args):
     excl_paths = exclude_paths(args)
     for root, dirs, files in os.walk(args.root):
-        filtered_dirs = []
-        for dirpath in dirs:
-            abspath = os.path.abspath(os.path.join(root, dirpath))
-            if abspath not in excl_paths:
-                filtered_dirs.append(dirpath)
-        dirs[:] = filtered_dirs
+        dirs[:] = filter_dirs(root, dirs, excl_paths)
+
         root_is_libtool_dir = is_libtool_dir(root)
         for filepath in files:
             basename, ext = os.path.splitext(filepath)
@@ -192,20 +202,6 @@ def parse_gcov_file(fobj):
         else:
             coverage.append(int(cov_num))
     return coverage
-
-
-def filter_dirs(root, dirs, excl_paths):
-    """Filter directory paths based on the exclusion rules defined in
-    'excl_paths'.
-    """
-    filtered_dirs = []
-    for dirpath in dirs:
-        abspath = os.path.abspath(os.path.join(root, dirpath))
-        if os.path.basename(abspath) in _SKIP_DIRS:
-            continue
-        if abspath not in excl_paths:
-            filtered_dirs.append(dirpath)
-    return filtered_dirs
 
 
 def collect_non_report_files(args, discovered_files):
