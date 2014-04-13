@@ -113,7 +113,7 @@ def run_gcov(args):
         filtered_dirs = []
         for dirpath in dirs:
             abspath = os.path.abspath(os.path.join(root, dirpath))
-            if not abspath in excl_paths:
+            if abspath not in excl_paths:
                 filtered_dirs.append(dirpath)
         dirs[:] = filtered_dirs
         root_is_libtool_dir = is_libtool_dir(root)
@@ -157,6 +157,38 @@ def run_gcov(args):
                                       os.path.join(root, files))
 
 
+def parse_gcov_file(fobj):
+    """Parses the content of .gcov file
+    """
+    coverage = []
+    for line in fobj:
+        report_fields = line.split(':')
+        cov_num = report_fields[0].strip()
+        line_num = int(report_fields[1].strip())
+        text = report_fields[2]
+        if line_num == 0:
+            continue
+        if cov_num == '-':
+            coverage.append(None)
+        elif cov_num == '#####':
+            # Avoid false positives.
+            if (
+                text.lstrip().startswith('static') or
+                text.strip() == '}' or
+                re.match(r'.*//\s*LCOV_EXCL_LINE\s*', text)
+            ):
+                coverage.append(None)
+            else:
+                coverage.append(0)
+        elif cov_num == '=====':
+            # This is indicitive of a gcov output parse
+            # error.
+            coverage.append(0)
+        else:
+            coverage.append(int(cov_num))
+    return coverage
+
+
 def collect(args):
     """Collect coverage reports."""
     excl_paths = exclude_paths(args)
@@ -177,7 +209,7 @@ def collect(args):
             abspath = os.path.abspath(os.path.join(root, dirpath))
             if os.path.basename(abspath) in skip_dirs:
                 continue
-            if not abspath in excl_paths:
+            if abspath not in excl_paths:
                 filtered_dirs.append(dirpath)
         dirs[:] = filtered_dirs
 
@@ -210,34 +242,8 @@ def collect(args):
                     with io.open(src_path, encoding=args.encoding) as src_file:
                         src_report['source'] = src_file.read()
 
-                    coverage = []
-                    for line in fobj:
-                        report_fields = line.split(':')
-                        cov_num = report_fields[0].strip()
-                        line_num = int(report_fields[1].strip())
-                        text = report_fields[2]
-                        if line_num == 0:
-                            continue
-                        if cov_num == '-':
-                            coverage.append(None)
-                        elif cov_num == '#####':
-                            # Avoid false positives.
-                            if (
-                                text.lstrip().startswith('static') or
-                                text.strip() == '}' or
-                                re.match(r'.*//\s*LCOV_EXCL_LINE\s*', text)
-                            ):
-                                coverage.append(None)
-                            else:
-                                coverage.append(0)
-                        elif cov_num == '=====':
-                            # This is indicitive of a gcov output parse
-                            # error.
-                            coverage.append(0)
-                        else:
-                            coverage.append(int(cov_num))
-                src_report['coverage'] = coverage
-                report['source_files'].append(src_report)
+                    src_report['coverage'] = parse_gcov_file(fobj)
+                    report['source_files'].append(src_report)
 
     # Also collects the source files that have no coverage reports.
     for root, dirs, files in os.walk(args.root):
@@ -246,7 +252,7 @@ def collect(args):
             abspath = os.path.abspath(os.path.join(root, dirpath))
             if os.path.basename(abspath) in skip_dirs:
                 continue
-            if not abspath in excl_paths:
+            if abspath not in excl_paths:
                 filtered_dirs.append(dirpath)
         dirs[:] = filtered_dirs
 
@@ -257,7 +263,7 @@ def collect(args):
             if is_excluded_path(args, abs_filepath):
                 continue
             filepath = os.path.relpath(abs_filepath, abs_root)
-            if not filepath in discoverd_files:
+            if filepath not in discoverd_files:
                 src_report = {}
                 src_report['name'] = filepath
                 coverage = []
