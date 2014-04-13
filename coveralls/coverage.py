@@ -12,6 +12,7 @@ from . import gitrepo
 
 
 _CPP_EXTENSIONS = ['.h', '.hpp', '.cpp', '.cc', '.c']
+_SKIP_DIRS = set(['.git', '.svn', 'deps'])
 
 
 def create_args(params):
@@ -97,15 +98,19 @@ def is_excluded_path(args, filepath):
                 return True
     return False
 
+
 def is_libtool_dir(dir_path):
     return os.path.basename(dir_path) == ".libs"
+
 
 def libtool_dir_to_source_dir(dir_path):
     return os.path.dirname(dir_path)
 
+
 def libtool_source_file_path(dir_path, source_file_path):
     source_dir_path = libtool_dir_to_source_dir(dir_path)
     return os.path.join(source_dir_path, source_file_path)
+
 
 def run_gcov(args):
     excl_paths = exclude_paths(args)
@@ -189,10 +194,53 @@ def parse_gcov_file(fobj):
     return coverage
 
 
+def filter_dirs(root, dirs, excl_paths):
+    """Filter directory paths based on the exclusion rules defined in
+    'excl_paths'.
+    """
+    filtered_dirs = []
+    for dirpath in dirs:
+        abspath = os.path.abspath(os.path.join(root, dirpath))
+        if os.path.basename(abspath) in _SKIP_DIRS:
+            continue
+        if abspath not in excl_paths:
+            filtered_dirs.append(dirpath)
+    return filtered_dirs
+
+
+def collect_non_report_files(args, discovered_files):
+    """Collects the source files that have no coverage reports.
+    """
+    excl_paths = exclude_paths(args)
+    abs_root = os.path.abspath(args.root)
+    non_report_files = []
+    for root, dirs, files in os.walk(args.root):
+        dirs[:] = filter_dirs(root, dirs, excl_paths)
+
+        for filename in files:
+            if not is_source_file(args, filename):
+                continue
+            abs_filepath = os.path.join(os.path.abspath(root), filename)
+            if is_excluded_path(args, abs_filepath):
+                continue
+            filepath = os.path.relpath(abs_filepath, abs_root)
+            if filepath not in discovered_files:
+                src_report = {}
+                src_report['name'] = filepath
+                coverage = []
+                with io.open(filepath, encoding=args.encoding) as fobj:
+                    for _ in fobj:
+                        coverage.append(None)
+                    fobj.seek(0)
+                    src_report['source'] = fobj.read()
+                src_report['coverage'] = coverage
+                non_report_files.append(src_report)
+    return non_report_files
+
+
 def collect(args):
     """Collect coverage reports."""
     excl_paths = exclude_paths(args)
-    skip_dirs = set(['.git', '.svn', '.deps'])
 
     report = {}
     if args.repo_token:
@@ -200,18 +248,11 @@ def collect(args):
     report['service_name'] = args.service_name
     report['service_job_id'] = args.service_job_id
 
-    discoverd_files = set()
+    discovered_files = set()
     report['source_files'] = []
     abs_root = os.path.abspath(args.root)
     for root, dirs, files in os.walk(args.root):
-        filtered_dirs = []
-        for dirpath in dirs:
-            abspath = os.path.abspath(os.path.join(root, dirpath))
-            if os.path.basename(abspath) in skip_dirs:
-                continue
-            if abspath not in excl_paths:
-                filtered_dirs.append(dirpath)
-        dirs[:] = filtered_dirs
+        dirs[:] = filter_dirs(root, dirs, excl_paths)
 
         root_is_libtool_dir = is_libtool_dir(root)
         for filepath in files:
@@ -221,12 +262,13 @@ def collect(args):
                     source_file_line = fobj.readline()
                     source_file_path = source_file_line.split(':')[-1].strip()
                     if not os.path.isabs(source_file_path):
-                        if (args.build_root):
+                        if args.build_root:
                             source_file_path = os.path.join(
                                 args.build_root, source_file_path)
                         elif root_is_libtool_dir:
                             source_file_path = os.path.abspath(
-                                libtool_source_file_path(root, source_file_path))
+                                libtool_source_file_path(
+                                    root, source_file_path))
                         else:
                             source_file_path = os.path.abspath(
                                 os.path.join(root, source_file_path))
@@ -238,7 +280,7 @@ def collect(args):
 
                     src_report = {}
                     src_report['name'] = src_path
-                    discoverd_files.add(src_path)
+                    discovered_files.add(src_path)
                     with io.open(src_path, encoding=args.encoding) as src_file:
                         src_report['source'] = src_file.read()
 
@@ -246,33 +288,8 @@ def collect(args):
                     report['source_files'].append(src_report)
 
     # Also collects the source files that have no coverage reports.
-    for root, dirs, files in os.walk(args.root):
-        filtered_dirs = []
-        for dirpath in dirs:
-            abspath = os.path.abspath(os.path.join(root, dirpath))
-            if os.path.basename(abspath) in skip_dirs:
-                continue
-            if abspath not in excl_paths:
-                filtered_dirs.append(dirpath)
-        dirs[:] = filtered_dirs
+    report['source_files'].extend(
+        collect_non_report_files(args, discovered_files))
 
-        for filename in files:
-            if not is_source_file(args, filename):
-                continue
-            abs_filepath = os.path.join(os.path.abspath(root), filename)
-            if is_excluded_path(args, abs_filepath):
-                continue
-            filepath = os.path.relpath(abs_filepath, abs_root)
-            if filepath not in discoverd_files:
-                src_report = {}
-                src_report['name'] = filepath
-                coverage = []
-                with io.open(filepath, encoding=args.encoding) as fobj:
-                    for line in fobj:
-                        coverage.append(None)
-                    fobj.seek(0)
-                    src_report['source'] = fobj.read()
-                src_report['coverage'] = coverage
-                report['source_files'].append(src_report)
     report['git'] = gitrepo.gitrepo('.')
     return report
