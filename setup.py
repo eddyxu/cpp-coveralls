@@ -13,7 +13,7 @@ os.chdir(wd)
 sys.path.insert(1, wd)
 
 name = 'cpp-coveralls'
-pkg = __import__('coveralls')
+pkg = __import__('cpp_coveralls')
 
 author, email = pkg.__author__.rsplit(' ', 1)
 email = email.strip('<>')
@@ -44,8 +44,8 @@ setup(
     keywords='coveralls.io',
     entry_points={
         'console_scripts': [
-            'coveralls = coveralls:run',
-            'cpp-coveralls = coveralls:run',
+            'coveralls = cpp_coveralls:run',
+            'cpp-coveralls = cpp_coveralls:run',
         ],
     },
 )
