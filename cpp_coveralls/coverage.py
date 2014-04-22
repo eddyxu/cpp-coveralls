@@ -11,8 +11,8 @@ import subprocess
 from . import gitrepo
 
 
-_CPP_EXTENSIONS = ['.h', '.hpp', '.cpp', '.cc', '.c']
-_SKIP_DIRS = set(['.git', '.svn', 'deps'])
+_CPP_EXTENSIONS = ['.h', '.hh', '.hpp', '.hxx', '.c', '.cc', '.cpp', '.cxx']
+_SKIP_DIRS = set(['.git', '.hg', '.svn', 'deps'])
 
 
 def create_args(params):
@@ -224,7 +224,7 @@ def collect_non_report_files(args, discovered_files):
                 src_report = {}
                 src_report['name'] = filepath
                 coverage = []
-                with io.open(filepath, encoding=args.encoding) as fobj:
+                with io.open(abs_filepath, encoding=args.encoding) as fobj:
                     for _ in fobj:
                         coverage.append(None)
                     fobj.seek(0)
@@ -277,7 +277,7 @@ def collect(args):
                     src_report = {}
                     src_report['name'] = src_path
                     discovered_files.add(src_path)
-                    with io.open(src_path, encoding=args.encoding) as src_file:
+                    with io.open(source_file_path, encoding=args.encoding) as src_file:
                         src_report['source'] = src_file.read()
 
                     src_report['coverage'] = parse_gcov_file(fobj)
