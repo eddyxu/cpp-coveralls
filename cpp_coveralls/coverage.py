@@ -11,8 +11,8 @@ import subprocess
 from . import gitrepo
 
 
-_CPP_EXTENSIONS = ['.h', '.hpp', '.cpp', '.cc', '.c']
-_SKIP_DIRS = set(['.git', '.svn', 'deps'])
+_CPP_EXTENSIONS = ['.h', '.hh', '.hpp', '.hxx', '.c', '.cc', '.cpp', '.cxx']
+_SKIP_DIRS = set(['.git', '.hg', '.svn', 'deps'])
 
 
 def create_args(params):
