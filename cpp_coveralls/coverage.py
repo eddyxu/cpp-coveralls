@@ -287,5 +287,6 @@ def collect(args):
     report['source_files'].extend(
         collect_non_report_files(args, discovered_files))
 
-    report['git'] = gitrepo.gitrepo('.')
+    # Use the root directory to get information on the Git repository
+    report['git'] = gitrepo.gitrepo(abs_root)
     return report
