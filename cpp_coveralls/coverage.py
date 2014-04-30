@@ -267,7 +267,7 @@ def collect(args):
                                     root, source_file_path))
                         else:
                             source_file_path = os.path.abspath(
-                                os.path.join(root, source_file_path))
+                                os.path.join(abs_root if os.path.dirname(source_file_path) else root, source_file_path))
                     src_path = os.path.relpath(source_file_path, abs_root)
                     if len(src_path) > 3 and src_path[:3] == '../':
                         continue
