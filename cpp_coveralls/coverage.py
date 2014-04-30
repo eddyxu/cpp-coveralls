@@ -1,4 +1,4 @@
-# Copyright 2013 (c) Lei Xu <eddyxu@gmail.com>
+# Copyright 2014 (c) Lei Xu <eddyxu@gmail.com>
 
 from __future__ import absolute_import
 
@@ -266,8 +266,11 @@ def collect(args):
                                 libtool_source_file_path(
                                     root, source_file_path))
                         else:
+                            the_root = os.path.dirname(source_file_path)
+                            if not the_root:
+                                the_root = root
                             source_file_path = os.path.abspath(
-                                os.path.join(abs_root if os.path.dirname(source_file_path) else root, source_file_path))
+                                os.path.join(root, source_file_path))
                     src_path = os.path.relpath(source_file_path, abs_root)
                     if len(src_path) > 3 and src_path[:3] == '../':
                         continue
@@ -277,7 +280,8 @@ def collect(args):
                     src_report = {}
                     src_report['name'] = src_path
                     discovered_files.add(src_path)
-                    with io.open(source_file_path, encoding=args.encoding) as src_file:
+                    with io.open(source_file_path,
+                                 encoding=args.encoding) as src_file:
                         src_report['source'] = src_file.read()
 
                     src_report['coverage'] = parse_gcov_file(fobj)
