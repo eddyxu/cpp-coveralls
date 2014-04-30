@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2013 (c) Lei Xu <eddyxu@gmail.com>
+# Copyright 2014 (c) Lei Xu <eddyxu@gmail.com>
 
 from . import coverage
 
