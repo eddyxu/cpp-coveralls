@@ -1,7 +1,9 @@
+Version 0.2.2 (Unreleased)
+  * Fixed a source file path generation problem (#41 by @sjaeckel)
+
 Version 0.2.1 (April 23th, 2014)
   * Add more C++ extensions and ignore Mercurial directory. Also fix a FileNotFoundError (#39 by @bchretien)
   * Fix Git repository for report (use root directory). (#40 by @bchretien)
-
 
 Version 0.2.0 (April 16th, 2014)
   * Remove `--use-mirrors` in README (#37 by @myint)
