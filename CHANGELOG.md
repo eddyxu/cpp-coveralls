@@ -1,5 +1,7 @@
-Version 0.2.2 (Unreleased)
+Version 0.2.2 (May 2nd, 2014)
   * Fixed a source file path generation problem (#41 by @sjaeckel)
+  * Enable testing on Python 3.4 (#44 by @myint)
+  * Support trying multiple encodings (#45 by @myint)
 
 Version 0.2.1 (April 23th, 2014)
   * Add more C++ extensions and ignore Mercurial directory. Also fix a FileNotFoundError (#39 by @bchretien)
