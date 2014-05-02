@@ -43,6 +43,9 @@ def run():
 
     args = coverage.create_args(sys.argv[1:])
 
+    if args.verbose:
+        print('encodings: {}'.format(args.encodings))
+
     try:
         import yaml
     except ImportError:

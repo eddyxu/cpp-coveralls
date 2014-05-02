@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 
 import argparse
+import contextlib
 import io
 import os
 import re
@@ -53,8 +54,10 @@ def create_args(params):
     parser.add_argument('-t', '--repo-token', '--repo_token', default='',
                         metavar='TOKEN',
                         help='set the repo_token of this project')
-    parser.add_argument('--encoding', default='utf-8',
-                        help='source encoding (default: %(default)s)')
+    parser.add_argument('--encodings',
+                        default=['utf-8', 'latin-1'], nargs='+',
+                        help='source encodings to try in order of preference '
+                             '(default: %(default)s)')
     parser.add_argument('--dump', nargs='?', type=argparse.FileType('w'),
                         help='dump JSON payload to a file',
                         default=None, metavar='FILE')
@@ -224,7 +227,8 @@ def collect_non_report_files(args, discovered_files):
                 src_report = {}
                 src_report['name'] = filepath
                 coverage = []
-                with io.open(abs_filepath, encoding=args.encoding) as fobj:
+                with open_with_encodings(abs_filepath,
+                                         encodings=args.encodings) as fobj:
                     for _ in fobj:
                         coverage.append(None)
                     fobj.seek(0)
@@ -280,8 +284,9 @@ def collect(args):
                     src_report = {}
                     src_report['name'] = src_path
                     discovered_files.add(src_path)
-                    with io.open(source_file_path,
-                                 encoding=args.encoding) as src_file:
+                    with open_with_encodings(
+                            source_file_path,
+                            encodings=args.encodings) as src_file:
                         src_report['source'] = src_file.read()
 
                     src_report['coverage'] = parse_gcov_file(fobj)
@@ -294,3 +299,35 @@ def collect(args):
     # Use the root directory to get information on the Git repository
     report['git'] = gitrepo.gitrepo(abs_root)
     return report
+
+
+@contextlib.contextmanager
+def open_with_encodings(filename, encodings):
+    """Try opening file with various encodings until it works.
+
+    Return the open file.
+
+    """
+    with io.open(filename,
+                 encoding=try_encodings(filename, encodings)) as input_file:
+        yield input_file
+
+
+def try_encodings(filename, encodings):
+    """Try opening file with various encodings and return the one works.
+
+    If none work, raise a ValueError.
+
+    """
+    assert encodings
+
+    for current in encodings:
+        try:
+            with io.open(filename, encoding=current) as input_file:
+                input_file.read()
+            return current
+        except UnicodeDecodeError:
+            pass
+
+    raise ValueError('Encodings {} are not compatible with {}'.format(
+        filename, encodings))
