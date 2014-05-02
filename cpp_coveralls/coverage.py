@@ -329,5 +329,7 @@ def try_encodings(filename, encodings):
         except UnicodeDecodeError:
             pass
 
-    raise ValueError('Encodings {} are not compatible with {}'.format(
-        filename, encodings))
+    raise ValueError(
+        'Encodings {encodings} are not compatible with {filename}'.format(
+            encodings=encodings,
+            filename=filename))
