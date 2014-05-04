@@ -273,7 +273,7 @@ def collect(args):
                             if os.path.dirname(source_file_path):
                                 the_root = abs_root
                             else:
-277                             the_root = root
+                                the_root = root
                             source_file_path = os.path.abspath(
                                 os.path.join(the_root, source_file_path))
                     src_path = os.path.relpath(source_file_path, abs_root)
