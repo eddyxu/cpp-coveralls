@@ -270,11 +270,12 @@ def collect(args):
                                 libtool_source_file_path(
                                     root, source_file_path))
                         else:
-                            the_root = os.path.dirname(source_file_path)
-                            if not the_root:
-                                the_root = root
+                            if os.path.dirname(source_file_path):
+                                the_root = abs_root
+                            else:
+277                             the_root = root
                             source_file_path = os.path.abspath(
-                                os.path.join(root, source_file_path))
+                                os.path.join(the_root, source_file_path))
                     src_path = os.path.relpath(source_file_path, abs_root)
                     if len(src_path) > 3 and src_path[:3] == '../':
                         continue
