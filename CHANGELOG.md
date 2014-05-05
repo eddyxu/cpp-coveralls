@@ -1,3 +1,6 @@
+Version 0.2.3 (May 4th, 2014)
+  * Fix source file path generation (#47 by sjaeckel)
+
 Version 0.2.2 (May 2nd, 2014)
   * Fixed a source file path generation problem (#41 by @sjaeckel)
   * Enable testing on Python 3.4 (#44 by @myint)
