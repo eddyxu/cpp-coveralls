@@ -206,7 +206,7 @@ def parse_gcov_file(fobj):
             coverage.append(int(cov_num))
     return coverage
 
-def combine_report(original, new):
+def combine_reports(original, new):
     if original == None:
         return new
     report = {}
