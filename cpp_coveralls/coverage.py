@@ -206,6 +206,24 @@ def parse_gcov_file(fobj):
             coverage.append(int(cov_num))
     return coverage
 
+def combine_report(original, new):
+    if original == None:
+        return new
+    report = {}
+    report['name'] = original['name']
+    report['source'] = original['source']
+    coverage = []
+    for original_num, new_num in zip(original['coverage'], new['coverage']):
+        if original_num == None:
+            coverage.append(new_num)
+        elif new_num == None:
+            coverage.append(original_num)
+        else:
+            coverage.append(original_num + new_num)
+        
+    report['coverage'] = coverage
+    return report
+
 
 def collect_non_report_files(args, discovered_files):
     """Collects the source files that have no coverage reports.
@@ -249,7 +267,7 @@ def collect(args):
     report['service_job_id'] = args.service_job_id
 
     discovered_files = set()
-    report['source_files'] = []
+    src_files = {}
     abs_root = os.path.abspath(args.root)
     for root, dirs, files in os.walk(args.root):
         dirs[:] = filter_dirs(root, dirs, excl_paths)
@@ -291,8 +309,9 @@ def collect(args):
                         src_report['source'] = src_file.read()
 
                     src_report['coverage'] = parse_gcov_file(fobj)
-                    report['source_files'].append(src_report)
+                    src_files[src_path] = combine_reports(src_files.get(src_path), src_report)
 
+    report['source_files'] = src_files.values()
     # Also collects the source files that have no coverage reports.
     report['source_files'].extend(
         collect_non_report_files(args, discovered_files))
