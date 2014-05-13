@@ -309,7 +309,10 @@ def collect(args):
                         src_report['source'] = src_file.read()
 
                     src_report['coverage'] = parse_gcov_file(fobj)
-                    src_files[src_path] = combine_reports(src_files.get(src_path), src_report)
+                    if src_path in src_files:
+                        src_files[src_path] = combine_reports(src_files[src_path], src_report)
+                    else:
+                        src_files[src_path] = src_report
 
     report['source_files'] = list(src_files.values())
     # Also collects the source files that have no coverage reports.
