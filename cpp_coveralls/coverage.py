@@ -207,6 +207,8 @@ def parse_gcov_file(fobj):
     return coverage
 
 def combine_reports(original, new):
+    """Combines two gcov reports for a file into one by adding the number of hits on each line
+    """
     if original == None:
         return new
     report = {}
