@@ -1,3 +1,6 @@
+Version 0.2.4 (May 17th, 2014)
+  * Combine multiple source files if they have the same path (#52 by @worktycho)
+
 Version 0.2.3 (May 4th, 2014)
   * Fix source file path generation (#47 by sjaeckel)
 
