@@ -1,3 +1,6 @@
+Version 0.2.5 (May 19th, 2014)
+  * Prevent cluttering gcov-options with local options (#53 by @ptomulik)
+
 Version 0.2.4 (May 17th, 2014)
   * Combine multiple source files if they have the same path (#52 by @worktycho)
 
