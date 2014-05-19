@@ -147,8 +147,10 @@ def run_gcov(args):
                     custom_gcov_root = libtool_dir_to_source_dir(root)
                 if custom_gcov_root:
                     gcov_root = custom_gcov_root
-                    args.gcov_options = args.gcov_options + \
-                        ' --object-directory ' + os.path.abspath(root)
+                    # This two lines break gcov execution when using the 
+                    # --build-root options:
+                    #args.gcov_options = args.gcov_options + \
+                    #    ' --object-directory ' + os.path.abspath(root)
                     # List current gcov files in build root. We want to move
                     # only the one we will generate now.
                     for files in os.listdir(custom_gcov_root):
