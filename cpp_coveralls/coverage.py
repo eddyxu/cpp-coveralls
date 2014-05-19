@@ -139,6 +139,7 @@ def run_gcov(args):
             basename, ext = os.path.splitext(filepath)
             if ext == '.gcno':
                 gcov_root = root
+                local_gcov_options = ''
                 # If the build root is set, run gcov in it, else run gcov in
                 # the directories of the .o files.
                 gcov_files = []
@@ -147,7 +148,7 @@ def run_gcov(args):
                     custom_gcov_root = libtool_dir_to_source_dir(root)
                 if custom_gcov_root:
                     gcov_root = custom_gcov_root
-                    args.gcov_options = args.gcov_options + \
+                    local_gcov_options = local_gcov_options + \
                         ' --object-directory ' + os.path.abspath(root)
                     # List current gcov files in build root. We want to move
                     # only the one we will generate now.
@@ -157,14 +158,14 @@ def run_gcov(args):
                 if re.search(r".*\.c.*", basename):
                     path = os.path.abspath(os.path.join(root, basename + '.o'))
                     subprocess.call(
-                        'cd %s && %s %s %s' % (
-                            gcov_root, args.gcov, args.gcov_options, path),
+                        'cd %s && %s %s%s %s' % (
+                            gcov_root, args.gcov, args.gcov_options, local_gcov_options, path),
                         shell=True)
                 else:
                     path = os.path.abspath(os.path.join(root, basename))
                     subprocess.call(
-                        'cd %s && %s %s %s' % (
-                            gcov_root, args.gcov, args.gcov_options, filepath),
+                        'cd %s && %s %s%s %s' % (
+                            gcov_root, args.gcov, args.gcov_options, local_gcov_options, filepath),
                         shell=True)
                 # If gcov was run in the build root move the resulting gcov
                 # file to the same directory as the .o file.
