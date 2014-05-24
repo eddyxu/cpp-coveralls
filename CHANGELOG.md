@@ -1,3 +1,6 @@
+Version 0.2.7 (May 24th, 2014)
+  * Fixed a bug caused by debug info (#59 by eddyxu)
+
 Version 0.2.6 (May 24th, 2014)
   * Allow to parse file through relative path (#58 by eddyxu)
 
