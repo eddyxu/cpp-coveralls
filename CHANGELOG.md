@@ -1,3 +1,6 @@
+Version 0.2.6 (May 24th, 2014)
+  * Allow to parse file through relative path (#58 by eddyxu)
+
 Version 0.2.5 (May 19th, 2014)
   * Prevent cluttering gcov-options with local options (#53 by @ptomulik)
 
