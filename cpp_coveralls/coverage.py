@@ -223,7 +223,7 @@ def combine_reports(original, new):
             coverage.append(original_num)
         else:
             coverage.append(original_num + new_num)
-        
+
     report['coverage'] = coverage
     return report
 
@@ -291,14 +291,15 @@ def collect(args):
                                 libtool_source_file_path(
                                     root, source_file_path))
                         else:
-                            if os.path.dirname(source_file_path):
+                            if not source_file_path.startswith('../') and \
+                                    os.path.dirname(source_file_path):
                                 the_root = abs_root
                             else:
                                 the_root = root
                             source_file_path = os.path.abspath(
                                 os.path.join(the_root, source_file_path))
                     src_path = os.path.relpath(source_file_path, abs_root)
-                    if len(src_path) > 3 and src_path[:3] == '../':
+                    if len(src_path) > 3 and src_path.startswith('../'):
                         continue
                     if is_excluded_path(args, source_file_path):
                         continue
@@ -306,6 +307,7 @@ def collect(args):
                     src_report = {}
                     src_report['name'] = src_path
                     discovered_files.add(src_path)
+                    print(the_root, src_path, source_file_path)
                     with open_with_encodings(
                             source_file_path,
                             encodings=args.encodings) as src_file:
