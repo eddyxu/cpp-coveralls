@@ -307,7 +307,6 @@ def collect(args):
                     src_report = {}
                     src_report['name'] = src_path
                     discovered_files.add(src_path)
-                    print(the_root, src_path, source_file_path)
                     with open_with_encodings(
                             source_file_path,
                             encodings=args.encodings) as src_file:
