@@ -192,7 +192,7 @@ def parse_gcov_file(fobj):
         elif cov_num == '#####':
             # Avoid false positives.
             if (
-                text.lstrip().startswith('static') or
+                text.lstrip().startswith(('inline', 'static')) or
                 text.strip() == '}' or
                 re.match(r'.*//\s*LCOV_EXCL_LINE\s*', text)
             ):
