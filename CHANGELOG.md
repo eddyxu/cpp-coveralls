@@ -1,3 +1,6 @@
+Version 0.2.8 (July 12th, 2014)
+  * Ignore incorrectly reported lines (#60 by @myint)
+
 Version 0.2.7 (May 24th, 2014)
   * Fixed a bug caused by debug info (#59 by eddyxu)
 
