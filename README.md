@@ -67,7 +67,7 @@ before_install:
 script:
   - ./configure --enable-gcov && make && make check
 after_success:
-  - coveralls --exclude lib --exclude tests
+  - coveralls --exclude lib --exclude tests --gcov-options '\-lp'
 ```
 
 ### OS X
@@ -90,5 +90,5 @@ before_install:
 script:
   - ./configure --enable-gcov && make && make check
 after_success:
-  - coveralls --exclude lib --exclude tests
+  - coveralls --exclude lib --exclude tests --gcov-options '\-lp'
 ```
