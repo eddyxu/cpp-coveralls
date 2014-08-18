@@ -8,6 +8,7 @@ import io
 import os
 import re
 import subprocess
+import sys
 
 from . import gitrepo
 
@@ -176,10 +177,11 @@ def run_gcov(args):
                                       os.path.join(root, files))
 
 
-def parse_gcov_file(fobj):
+def parse_gcov_file(fobj, filename):
     """Parses the content of .gcov file
     """
     coverage = []
+    ignoring = False
     for line in fobj:
         report_fields = line.split(':')
         cov_num = report_fields[0].strip()
@@ -187,11 +189,23 @@ def parse_gcov_file(fobj):
         text = report_fields[2]
         if line_num == 0:
             continue
+        if re.search(r'\bLCOV_EXCL_START\b', text):
+            if ignoring:
+                sys.stderr.write("Warning: %s:%d: nested LCOV_EXCL_START, "
+                                 "please fix\n" % (filename, line_num))
+            ignoring = True
+        elif re.search(r'\bLCOV_EXCL_END\b', text):
+            if not ignoring:
+                sys.stderr.write("Warning: %s:%d: LCOV_EXCL_END outside of "
+                                 "exclusion zone, please fix\n" % (filename,
+                                                                   line_num))
+            ignoring = False
         if cov_num == '-':
             coverage.append(None)
         elif cov_num == '#####':
             # Avoid false positives.
             if (
+                ignoring or
                 text.lstrip().startswith(('inline', 'static')) or
                 text.strip() == '}' or
                 re.search(r'\bLCOV_EXCL_LINE\b', text)
@@ -312,7 +326,7 @@ def collect(args):
                             encodings=args.encodings) as src_file:
                         src_report['source'] = src_file.read()
 
-                    src_report['coverage'] = parse_gcov_file(fobj)
+                    src_report['coverage'] = parse_gcov_file(fobj, gcov_path)
                     if src_path in src_files:
                         src_files[src_path] = combine_reports(src_files[src_path], src_report)
                     else:
