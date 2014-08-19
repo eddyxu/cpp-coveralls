@@ -1,3 +1,6 @@
+Version 0.2.9 (August 20th, 2014)
+  * Fixed ignore lines in source code. (#63 by @remram44)
+
 Version 0.2.8 (July 12th, 2014)
   * Ignore incorrectly reported lines (#60 by @myint)
 
