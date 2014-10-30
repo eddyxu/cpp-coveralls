@@ -41,6 +41,8 @@ def create_args(params):
                              'to find the source files')
     parser.add_argument('-e', '--exclude', metavar='DIR|FILE', action='append',
                         help='set exclude file or directory')
+    parser.add_argument('-i', '--include', metavar='DIR|FILE', action='append',
+                        help='set include file or directory')
     parser.add_argument('-E', '--exclude-pattern', dest='regexp',
                         action='append', metavar='REGEXP', default=[],
                         help='set exclude file/directory pattern')
@@ -85,6 +87,12 @@ def exclude_paths(args):
 
 def is_excluded_path(args, filepath):
     """Returns true if the filepath is under the one of the exclude path."""
+    if args.include:
+        abspath = os.path.abspath(filepath)
+        for incl_path in args.include:
+            if abspath == incl_path:
+                return False
+        return True
     excl_paths = exclude_paths(args)
     # Try regular expressions first.
     for regexp_exclude_path in args.regexp:
