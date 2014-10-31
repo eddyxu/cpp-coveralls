@@ -38,6 +38,8 @@ optional arguments:
                         as the compiler in order to find the source files
   -e DIR|FILE, --exclude DIR|FILE
                         set exclude file or directory
+  -i DIR|FILE, --include DIR|FILE
+                        set include file or directory
   -E REGEXP, --exclude-pattern REGEXP
                         set exclude file/directory pattern
   -x EXT, --extension EXT
