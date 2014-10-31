@@ -1,3 +1,6 @@
+Version 0.3.0 ()
+  * Added option to include specific files. (#67 by @jbenden)
+
 Version 0.2.9 (August 20th, 2014)
   * Fixed ignore lines in source code. (#63 by @remram44)
 
