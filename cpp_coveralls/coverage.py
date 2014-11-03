@@ -90,8 +90,14 @@ def is_excluded_path(args, filepath):
     if args.include:
         abspath = os.path.abspath(filepath)
         for incl_path in args.include:
-            if abspath == incl_path:
-                return False
+            if os.path.isdir(incl_path):
+                relpath = os.path.relpath(abspath, incl_path)
+                if len(relpath) > 3 and relpath[:3] != '../':
+                    return False
+            else:
+                absincl_path = os.path.abspath(incl_path)
+                if abspath == absincl_path:
+                    return False
         return True
     excl_paths = exclude_paths(args)
     # Try regular expressions first.
