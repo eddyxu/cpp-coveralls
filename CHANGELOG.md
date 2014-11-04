@@ -1,4 +1,7 @@
-Version 0.3.0 ()
+Version 0.3.1 (November 3rd, 2014)
+  * Added support for directories using the include option. (#68 by @jbenden)
+
+Version 0.3.0 (November 2nd, 2014)
   * Added option to include specific files. (#67 by @jbenden)
 
 Version 0.2.9 (August 20th, 2014)
