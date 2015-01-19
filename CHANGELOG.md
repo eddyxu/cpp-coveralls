@@ -1,3 +1,6 @@
+Version 0.3.2 (January 18th, 2015)
+  * Support excluding files in the include directories. (by @eddyxu)
+
 Version 0.3.1 (November 3rd, 2014)
   * Added support for directories using the include option. (#68 by @jbenden)
 

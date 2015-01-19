@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 #
-# Copyright 2014 (c) Lei Xu <eddyxu@gmail.com>
+# Copyright 2015 (c) Lei Xu <eddyxu@gmail.com>
 
 import tempfile
 import unittest

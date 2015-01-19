@@ -1,5 +1,6 @@
-# Copyright 2014 (c) Lei Xu <eddyxu@gmail.com>
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
+#
+# Copyright 2015 (c) Lei Xu <eddyxu@gmail.com>
 
 from __future__ import absolute_import
 
