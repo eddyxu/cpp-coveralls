@@ -1,4 +1,5 @@
 # Copyright 2014 (c) Lei Xu <eddyxu@gmail.com>
+# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 
 from __future__ import absolute_import
 
@@ -98,7 +99,6 @@ def is_excluded_path(args, filepath):
                 absincl_path = os.path.abspath(incl_path)
                 if abspath == absincl_path:
                     return False
-        return True
     excl_paths = exclude_paths(args)
     # Try regular expressions first.
     for regexp_exclude_path in args.regexp:
