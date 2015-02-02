@@ -42,9 +42,9 @@ def create_args(params):
                              'the same directory as the compiler in order '
                              'to find the source files')
     parser.add_argument('-e', '--exclude', metavar='DIR|FILE', action='append',
-                        help='set exclude file or directory')
+                        help='set exclude file or directory', default=[])
     parser.add_argument('-i', '--include', metavar='DIR|FILE', action='append',
-                        help='set include file or directory')
+                        help='set include file or directory', default=[])
     parser.add_argument('-E', '--exclude-pattern', dest='regexp',
                         action='append', metavar='REGEXP', default=[],
                         help='set exclude file/directory pattern')
@@ -87,34 +87,61 @@ def exclude_paths(args):
     return results
 
 
+_cached_exclude_rules = None
+
+
+def create_exclude_rules(args):
+    """Creates the exlude rules
+    """
+    global _cached_exclude_rules
+    if _cached_exclude_rules is not None:
+        return _cached_exclude_rules
+    rules = []
+    for excl_path in args.exclude:
+        abspath = os.path.abspath(os.path.join(args.root, excl_path))
+        rules.append((abspath, True))
+    for incl_path in args.include:
+        abspath = os.path.abspath(os.path.join(args.root, incl_path))
+        rules.append((abspath, False))
+    _cached_exclude_rules = sorted(rules, key=lambda p: p[0])
+    return _cached_exclude_rules
+
+
+def is_child_dir(parent, child):
+    relaive = os.path.relpath(child, parent)
+    return not relaive.startswith(os.pardir)
+
+
 def is_excluded_path(args, filepath):
     """Returns true if the filepath is under the one of the exclude path."""
-    if args.include:
-        abspath = os.path.abspath(filepath)
-        for incl_path in args.include:
-            if os.path.isdir(incl_path):
-                relpath = os.path.relpath(abspath, incl_path)
-                if len(relpath) > 3 and relpath[:3] != '../':
-                    return False
-            else:
-                absincl_path = os.path.abspath(incl_path)
-                if abspath == absincl_path:
-                    return False
-    excl_paths = exclude_paths(args)
     # Try regular expressions first.
     for regexp_exclude_path in args.regexp:
         if re.match(regexp_exclude_path, filepath):
             return True
     abspath = os.path.abspath(filepath)
-    for excluded_path in excl_paths:
-        if os.path.isdir(excluded_path):
-            relpath = os.path.relpath(abspath, excluded_path)
-            if len(relpath) > 3 and relpath[:3] != '../':
-                return True
-        else:
-            absexcludefile = os.path.abspath(excluded_path)
-            if absexcludefile == abspath:
-                return True
+    if args.include:
+      # If the file is outside of any include directories.
+      out_of_include_dirs = True
+      for incl_path in args.include:
+        absolute_include_path = os.path.abspath(os.path.join(args.root, incl_path))
+        if is_child_dir(absolute_include_path, abspath):
+          out_of_include_dirs = False
+          break
+      if out_of_include_dirs:
+        return True
+    excl_rules = create_exclude_rules(args)
+    for i, rule in enumerate(excl_rules):
+        if rule[0] == abspath:
+            return rule[1]
+        if is_child_dir(rule[0], abspath):
+            # continue to try to longest match.
+            last_result = rule[1]
+            for j in range(i + 1, len(excl_rules)):
+                rule_deep = excl_rules[j]
+                if not is_child_dir(rule_deep[0], abspath):
+                    break
+                last_result = rule_deep[1]
+            return last_result
     return False
 
 
@@ -235,6 +262,7 @@ def parse_gcov_file(fobj, filename):
         else:
             coverage.append(int(cov_num))
     return coverage
+
 
 def combine_reports(original, new):
     """Combines two gcov reports for a file into one by adding the number of hits on each line
