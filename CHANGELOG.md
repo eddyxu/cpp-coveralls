@@ -1,3 +1,6 @@
+Version 0.3.3 (February 3rd, 2015)
+  * Support recursive include and exclude rules. (by @eddyxu)
+
 Version 0.3.2 (January 18th, 2015)
   * Support excluding files in the include directories. (by @eddyxu)
 
