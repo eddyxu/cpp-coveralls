@@ -1,3 +1,7 @@
+Version 0.3.4 (March 23th, 2015)
+  * Skip over messages in gcov file. (#74 by @DaMouse404)
+  * Added additional configuration settings to the .coveralls.yaml file (#75 by @umar456)
+
 Version 0.3.3 (February 3rd, 2015)
   * Support recursive include and exclude rules. (by @eddyxu)
 
