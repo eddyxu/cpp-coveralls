@@ -65,6 +65,17 @@ def run():
     if not args.repo_token:
         args.repo_token = yml.get('repo_token', '')
     args.service_name = yml.get('service_name', 'travis-ci')
+
+    if not args.gcov_options:
+        args.gcov_options = yml.get('gcov_options', '')
+    if not args.root:
+        args.root = yml.get('root', '.')
+    if not args.build_root:
+        args.build_root = yml.get('build_root', '')
+
+    args.exclude.extend(yml.get('exclude', []))
+    args.include.extend(yml.get('include', []))
+
     args.service_job_id = os.environ.get('TRAVIS_JOB_ID', '')
 
     if not args.no_gcov:
