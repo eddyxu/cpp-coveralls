@@ -58,7 +58,9 @@ def create_args(params):
                         help='do not run gcov')
     parser.add_argument('-t', '--repo-token', '--repo_token', default='',
                         metavar='TOKEN',
-                        help='set the repo_token of this project')
+                        help='set the repo_token of this project, '
+                             'alternatively you can set the environmental '
+                             'variable COVERALLS_REPO_TOKEN')
     parser.add_argument('--encodings',
                         default=['utf-8', 'latin-1'], nargs='+',
                         help='source encodings to try in order of preference '
@@ -228,7 +230,7 @@ def parse_gcov_file(fobj, filename):
         report_fields = line.split(':')
         if len(report_fields) == 1:
             continue
-        
+
         cov_num = report_fields[0].strip()
         line_num = int(report_fields[1].strip())
         text = report_fields[2]
@@ -326,6 +328,9 @@ def collect(args):
     report = {}
     if args.repo_token:
         report['repo_token'] = args.repo_token
+    elif os.environ.get('COVERALLS_REPO_TOKEN'):
+        report['repo_token'] = os.environ.get('COVERALLS_REPO_TOKEN')
+
     report['service_name'] = args.service_name
     report['service_job_id'] = args.service_job_id
 
