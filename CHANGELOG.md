@@ -1,3 +1,6 @@
+Version 0.4.5 (April 15th, 2015)
+  * cpp-coveralls now respects environmental variable `COVERALLS_REPO_TOKEN` (#78 by @mkfifo)
+
 Version 0.3.4 (March 23th, 2015)
   * Skip over messages in gcov file. (#74 by @DaMouse404)
   * Added additional configuration settings to the .coveralls.yaml file (#75 by @umar456)
