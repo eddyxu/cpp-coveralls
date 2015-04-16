@@ -122,15 +122,16 @@ def is_excluded_path(args, filepath):
             return True
     abspath = os.path.abspath(filepath)
     if args.include:
-      # If the file is outside of any include directories.
-      out_of_include_dirs = True
-      for incl_path in args.include:
-        absolute_include_path = os.path.abspath(os.path.join(args.root, incl_path))
-        if is_child_dir(absolute_include_path, abspath):
-          out_of_include_dirs = False
-          break
-      if out_of_include_dirs:
-        return True
+        # If the file is outside of any include directories.
+        out_of_include_dirs = True
+        for incl_path in args.include:
+            absolute_include_path = os.path.abspath(os.path.join(args.root, incl_path))
+            if is_child_dir(absolute_include_path, abspath):
+                out_of_include_dirs = False
+                break
+        if out_of_include_dirs:
+            return True
+
     excl_rules = create_exclude_rules(args)
     for i, rule in enumerate(excl_rules):
         if rule[0] == abspath:
