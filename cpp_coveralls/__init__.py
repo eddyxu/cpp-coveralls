@@ -67,7 +67,12 @@ def run():
     yml = parse_yaml_config(args)
 
     if not args.repo_token:
+        # try get token from yaml first
         args.repo_token = yml.get('repo_token', '')
+    if not args.repo_token:
+        # use environment COVERALLS_REPO_TOKEN as a fallback
+        args.repo_token = os.environ.get('COVERALLS_REPO_TOKEN')
+
     args.service_name = yml.get('service_name', 'travis-ci')
 
     if not args.gcov_options:
@@ -81,6 +86,10 @@ def run():
     args.include.extend(yml.get('include', []))
 
     args.service_job_id = os.environ.get('TRAVIS_JOB_ID', '')
+
+    if args.repo_token == '' and args.service_job_id == '':
+        raise ValueError("\nno coveralls.io token specified and no travis job id found\n"
+                         "see --help for examples on how to specify a token\n")
 
     if not args.no_gcov:
         coverage.run_gcov(args)
