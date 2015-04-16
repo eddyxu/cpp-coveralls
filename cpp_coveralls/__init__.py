@@ -34,6 +34,23 @@ __license__ = """
     limitations under the License.
     """ % __copyright__
 
+def parse_yaml_config(args):
+    """Parse yaml config"""
+    try:
+        import yaml
+    except ImportError:
+        yaml = None
+
+    yml = {}
+    try:
+        with open(args.coveralls_yaml, 'r') as fp:
+            if not yaml:
+                raise SystemExit('PyYAML is required for parsing configuration')
+            yml = yaml.load(fp)
+    except IOError:
+        pass
+    yml = yml or {}
+    return yml
 
 def run():
     """Run cpp coverage."""
@@ -47,21 +64,7 @@ def run():
     if args.verbose:
         print('encodings: {}'.format(args.encodings))
 
-    try:
-        import yaml
-    except ImportError:
-        yaml = None
-
-    yml = {}
-    try:
-        with open(args.coveralls_yaml, 'r') as fp:
-            if not yaml:
-                raise SystemExit(
-                    'PyYAML is required for parsing configuration')
-            yml = yaml.load(fp)
-    except IOError:
-        pass
-    yml = yml or {}
+    yml = parse_yaml_config(args)
 
     if not args.repo_token:
         args.repo_token = yml.get('repo_token', '')
