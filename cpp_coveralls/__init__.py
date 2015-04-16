@@ -14,7 +14,8 @@ __classifiers__ = [
     'Topic :: Internet :: WWW/HTTP',
     'Topic :: Software Development :: Libraries',
     'Topic :: Software Development :: Quality Assurance',
-    'Topic :: Utilities']
+    'Topic :: Utilities',
+]
 
 __copyright__ = '2015, %s ' % __author__
 __license__ = """
