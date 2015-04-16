@@ -280,9 +280,9 @@ def combine_reports(original, new):
     report['source'] = original['source']
     coverage = []
     for original_num, new_num in zip(original['coverage'], new['coverage']):
-        if original_num == None:
+        if original_num is None:
             coverage.append(new_num)
-        elif new_num == None:
+        elif new_num is None:
             coverage.append(original_num)
         else:
             coverage.append(original_num + new_num)
