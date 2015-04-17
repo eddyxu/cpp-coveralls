@@ -5,7 +5,7 @@
 from __future__ import absolute_import
 
 import argparse
-import contextlib
+import hashlib
 import io
 import os
 import re
@@ -277,7 +277,7 @@ def combine_reports(original, new):
         return new
     report = {}
     report['name'] = original['name']
-    report['source'] = original['source']
+    report['source_digest'] = original['source_digest']
     coverage = []
     for original_num, new_num in zip(original['coverage'], new['coverage']):
         if original_num is None:
@@ -311,12 +311,11 @@ def collect_non_report_files(args, discovered_files):
                 src_report = {}
                 src_report['name'] = filepath
                 coverage = []
-                with open_with_encodings(abs_filepath,
-                                         encodings=args.encodings) as fobj:
+                with io.open(abs_filepath, mode='rb') as fobj:
                     for _ in fobj:
                         coverage.append(None)
                     fobj.seek(0)
-                    src_report['source'] = fobj.read()
+                    src_report['source_digest'] = hashlib.md5(fobj.read()).hexdigest()
                 src_report['coverage'] = coverage
                 non_report_files.append(src_report)
     return non_report_files
@@ -373,10 +372,8 @@ def collect(args):
                     src_report = {}
                     src_report['name'] = src_path
                     discovered_files.add(src_path)
-                    with open_with_encodings(
-                            source_file_path,
-                            encodings=args.encodings) as src_file:
-                        src_report['source'] = src_file.read()
+                    with io.open(source_file_path, mode='rb') as src_file:
+                        src_report['source_digest'] = hashlib.md5(src_file.read()).hexdigest()
 
                     src_report['coverage'] = parse_gcov_file(fobj, gcov_path)
                     if src_path in src_files:
@@ -392,37 +389,3 @@ def collect(args):
     # Use the root directory to get information on the Git repository
     report['git'] = gitrepo.gitrepo(abs_root)
     return report
-
-
-@contextlib.contextmanager
-def open_with_encodings(filename, encodings):
-    """Try opening file with various encodings until it works.
-
-    Return the open file.
-
-    """
-    with io.open(filename,
-                 encoding=try_encodings(filename, encodings)) as input_file:
-        yield input_file
-
-
-def try_encodings(filename, encodings):
-    """Try opening file with various encodings and return the one works.
-
-    If none work, raise a ValueError.
-
-    """
-    assert encodings
-
-    for current in encodings:
-        try:
-            with io.open(filename, encoding=current) as input_file:
-                input_file.read()
-            return current
-        except UnicodeDecodeError:
-            pass
-
-    raise ValueError(
-        'Encodings {encodings} are not compatible with {filename}'.format(
-            encodings=encodings,
-            filename=filename))
