@@ -122,15 +122,16 @@ def is_excluded_path(args, filepath):
             return True
     abspath = os.path.abspath(filepath)
     if args.include:
-      # If the file is outside of any include directories.
-      out_of_include_dirs = True
-      for incl_path in args.include:
-        absolute_include_path = os.path.abspath(os.path.join(args.root, incl_path))
-        if is_child_dir(absolute_include_path, abspath):
-          out_of_include_dirs = False
-          break
-      if out_of_include_dirs:
-        return True
+        # If the file is outside of any include directories.
+        out_of_include_dirs = True
+        for incl_path in args.include:
+            absolute_include_path = os.path.abspath(os.path.join(args.root, incl_path))
+            if is_child_dir(absolute_include_path, abspath):
+                out_of_include_dirs = False
+                break
+        if out_of_include_dirs:
+            return True
+
     excl_rules = create_exclude_rules(args)
     for i, rule in enumerate(excl_rules):
         if rule[0] == abspath:
@@ -272,16 +273,16 @@ def parse_gcov_file(fobj, filename):
 def combine_reports(original, new):
     """Combines two gcov reports for a file into one by adding the number of hits on each line
     """
-    if original == None:
+    if original is None:
         return new
     report = {}
     report['name'] = original['name']
     report['source'] = original['source']
     coverage = []
     for original_num, new_num in zip(original['coverage'], new['coverage']):
-        if original_num == None:
+        if original_num is None:
             coverage.append(new_num)
-        elif new_num == None:
+        elif new_num is None:
             coverage.append(original_num)
         else:
             coverage.append(original_num + new_num)
