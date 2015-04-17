@@ -17,7 +17,7 @@ Inspired from [z4r/python-coveralls](https://github.com/z4r/python-coveralls), i
 $ coveralls -h
 usage: coveralls [-h] [--verbose] [--dryrun] [--gcov FILE]
                  [--gcov-options GCOV_OPTS] [-r DIR] [-b DIR] [-e DIR|FILE]
-                 [-E REGEXP] [-x EXT] [-y FILE] [-n] [-t TOKEN]
+                 [-i DIR|FILE] [-E REGEXP] [-x EXT] [-y FILE] [-n] [-t TOKEN]
                  [--encodings ENCODINGS [ENCODINGS ...]] [--dump [FILE]]
 
 optional arguments:
@@ -48,7 +48,9 @@ optional arguments:
                         coveralls yaml file name (default: .coveralls.yml)
   -n, --no-gcov         do not run gcov
   -t TOKEN, --repo-token TOKEN, --repo_token TOKEN
-                        set the repo_token of this project
+                        set the repo_token of this project, alternatively you
+                        can set the environmental variable
+                        COVERALLS_REPO_TOKEN
   --encodings ENCODINGS [ENCODINGS ...]
                         source encodings to try in order of preference
                         (default: ['utf-8', 'latin-1'])
