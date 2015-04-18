@@ -1,4 +1,7 @@
-Version 0.4.5 (April 15th, 2015)
+Version 0.3.6 (April 17th, 2015)
+  * Use new coveralls API `source_digesti` instead of `source`. (#83 by dmakarov)
+
+Version 0.3.5 (April 15th, 2015)
   * cpp-coveralls now respects environmental variable `COVERALLS_REPO_TOKEN` (#78 by @mkfifo)
 
 Version 0.3.4 (March 23th, 2015)
