@@ -42,21 +42,5 @@ class CoverageTest(unittest.TestCase):
         self.assertTrue(coverage.is_excluded_path(args, '/src/bar/bar-and-bar.txt'))
         self.assertTrue(coverage.is_excluded_path(args, '/src/foo/subfoo/subfoo.txt'))
 
-    def test_try_encodings(self):
-        with tempfile.NamedTemporaryFile(mode='wb') as output_file:
-            output_file.write(b'\xe8')
-            output_file.flush()
-
-            assert coverage.try_encodings(output_file.name,
-                                          ['utf-8', 'latin-1']) == 'latin-1'
-
-            exception = None
-            try:
-                coverage.try_encodings(output_file.name,
-                                       ['utf-8'])
-            except ValueError as temporary:
-                exception = temporary
-            assert exception
-
 if __name__ == '__main__':
     unittest.main()
