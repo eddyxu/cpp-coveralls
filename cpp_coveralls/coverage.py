@@ -328,8 +328,6 @@ def collect(args):
     report = {}
     if args.repo_token:
         report['repo_token'] = args.repo_token
-    elif os.environ.get('COVERALLS_REPO_TOKEN'):
-        report['repo_token'] = os.environ.get('COVERALLS_REPO_TOKEN')
 
     report['service_name'] = args.service_name
     report['service_job_id'] = args.service_job_id
