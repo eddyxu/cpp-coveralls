@@ -1,5 +1,10 @@
+Version 0.3.7 (May 10th, 2015)
+  * Add Objective-C file extensions by default. (#86 by @0xcedv)
+  * Properly quote paths when invoking shell (#85 by @0xcedv)
+  * Cpp-coverals will now raise an exception if neither the travis job id nor the repo token are found (#84 by @mkfifo)
+
 Version 0.3.6 (April 17th, 2015)
-  * Use new coveralls API `source_digesti` instead of `source`. (#83 by dmakarov)
+  * Use new coveralls API `source_digest` instead of `source`. (#83 by @dmakarov)
 
 Version 0.3.5 (April 15th, 2015)
   * cpp-coveralls now respects environmental variable `COVERALLS_REPO_TOKEN` (#78 by @mkfifo)
