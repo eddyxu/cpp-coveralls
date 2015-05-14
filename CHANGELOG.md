@@ -1,6 +1,6 @@
 Version 0.3.7 (May 10th, 2015)
-  * Add Objective-C file extensions by default. (#86 by @0xcedv)
-  * Properly quote paths when invoking shell (#85 by @0xcedv)
+  * Add Objective-C file extensions by default. (#86 by @0xced)
+  * Properly quote paths when invoking shell (#85 by @0xced)
   * Cpp-coverals will now raise an exception if neither the travis job id nor the repo token are found (#84 by @mkfifo)
 
 Version 0.3.6 (April 17th, 2015)
