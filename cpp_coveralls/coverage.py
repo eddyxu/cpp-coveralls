@@ -68,6 +68,8 @@ def create_args(params):
     parser.add_argument('--dump', nargs='?', type=argparse.FileType('w'),
                         help='dump JSON payload to a file',
                         default=None, metavar='FILE')
+    parser.add_argument('--follow-symlinks', action='store_true',
+                        help='Follow symlinks (default off)')
 
     return parser.parse_args(params)
 
@@ -177,7 +179,7 @@ def filter_dirs(root, dirs, excl_paths):
 
 def run_gcov(args):
     excl_paths = exclude_paths(args)
-    for root, dirs, files in os.walk(args.root):
+    for root, dirs, files in os.walk(args.root, followlinks=args.follow_symlinks):
         dirs[:] = filter_dirs(root, dirs, excl_paths)
 
         root_is_libtool_dir = is_libtool_dir(root)
