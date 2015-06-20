@@ -1,3 +1,7 @@
+Version 0.3.8 (June 20th, 2015)
+  * Fix typo (#87 by @Oxced)
+  * Add an option to follow symlinks (#89 by nomis52)
+
 Version 0.3.7 (May 10th, 2015)
   * Add Objective-C file extensions by default. (#86 by @0xced)
   * Properly quote paths when invoking shell (#85 by @0xced)
