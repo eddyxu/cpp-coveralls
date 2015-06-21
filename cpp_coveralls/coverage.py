@@ -299,7 +299,7 @@ def collect_non_report_files(args, discovered_files):
     excl_paths = exclude_paths(args)
     abs_root = os.path.abspath(args.root)
     non_report_files = []
-    for root, dirs, files in os.walk(args.root):
+    for root, dirs, files in os.walk(args.root, followlinks=args.follow_symlinks):
         dirs[:] = filter_dirs(root, dirs, excl_paths)
 
         for filename in files:
@@ -337,7 +337,7 @@ def collect(args):
     discovered_files = set()
     src_files = {}
     abs_root = os.path.abspath(args.root)
-    for root, dirs, files in os.walk(args.root):
+    for root, dirs, files in os.walk(args.root, followlinks=args.follow_symlinks):
         dirs[:] = filter_dirs(root, dirs, excl_paths)
 
         root_is_libtool_dir = is_libtool_dir(root)
