@@ -244,11 +244,14 @@ def parse_gcov_file(fobj, filename):
                 sys.stderr.write("Warning: %s:%d: nested LCOV_EXCL_START, "
                                  "please fix\n" % (filename, line_num))
             ignoring = True
-        elif re.search(r'\bLCOV_EXCL_END\b', text):
+        elif re.search(r'\bLCOV_EXCL_(STOP|END)\b', text):
             if not ignoring:
-                sys.stderr.write("Warning: %s:%d: LCOV_EXCL_END outside of "
+                sys.stderr.write("Warning: %s:%d: LCOV_EXCL_STOP outside of "
                                  "exclusion zone, please fix\n" % (filename,
                                                                    line_num))
+            if 'LCOV_EXCL_END' in text:
+                sys.stderr.write("Warning: %s:%d: LCOV_EXCL_STOP is the "
+                                 "correct keyword\n" % (filename, line_num))
             ignoring = False
         if cov_num == '-':
             coverage.append(None)

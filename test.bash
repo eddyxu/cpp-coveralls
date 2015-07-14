@@ -12,7 +12,7 @@ int main() {
         /* LCOV_EXCL_START */
         a = 4;
         a = 5;
-        /* LCOV_EXCL_END */
+        /* LCOV_EXCL_STOP */
         a = 6;
     }
     if(a == 7) {
