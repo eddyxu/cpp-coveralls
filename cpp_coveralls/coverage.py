@@ -236,7 +236,7 @@ def parse_gcov_file(fobj, filename):
 
         cov_num = report_fields[0].strip()
         line_num = int(report_fields[1].strip())
-        text = report_fields[2]
+        text = ":".join(report_fields[2:])
         if line_num == 0:
             continue
         if re.search(r'\bLCOV_EXCL_START\b', text):
