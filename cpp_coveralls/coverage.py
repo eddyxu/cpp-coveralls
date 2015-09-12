@@ -247,6 +247,7 @@ def run_gcov(args):
                     if gcov_root != root:
                         subprocess.call('cp %s.gc* %s' % (os.path.join(root, basename), gcov_root), shell=True)
 
+                    subprocess.call('cd "%s" && find .' % gcov_root, shell=True)
                     subprocess.call(
                         'cd "%s" && %s %s%s "%s"' % (
                             gcov_root, args.gcov, args.gcov_options,
