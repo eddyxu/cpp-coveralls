@@ -177,6 +177,36 @@ def filter_dirs(root, dirs, excl_paths):
     return filtered_dirs
 
 
+def get_run_dir(gcov, gcno_file):
+    """Guess the directory that ran the program to generate .gcno file.
+    """
+    assert gcno_file.endswith('.gcno')
+    output = subprocess.check_output(
+        '%s -n %s' % (gcov, gcno_file), shell=True) \
+        .split(os.linesep)
+    files = []
+    for l in output:
+        if l.startswith('File '):
+            source_file = l.split()[1].strip("'")
+            files.append(source_file)
+    assert files
+    basedir = os.path.dirname(gcno_file)
+    possible_root = set([])
+    for source_file in files:
+        if os.path.exists(os.path.join(basedir, source_file)):
+            possible_root.add(basedir)
+            continue
+        proot = basedir
+        source_dir = os.path.dirname(source_file)
+        while source_dir:
+            assert os.path.basename(source_dir) == os.path.basename(proot)
+            source_dir = os.path.dirname(source_dir)
+            proot = os.path.dirname(proot)
+        possible_root.add(proot)
+    assert len(possible_root) == 1
+    return possible_root.pop()
+
+
 def run_gcov(args):
     excl_paths = exclude_paths(args)
     for root, dirs, files in os.walk(args.root, followlinks=args.follow_symlinks):
@@ -210,10 +240,15 @@ def run_gcov(args):
                             gcov_root, args.gcov, args.gcov_options, local_gcov_options, path),
                         shell=True)
                 else:
-                    path = os.path.abspath(os.path.join(root, basename))
+                    print('ROOT=' + root)
+                    abspath = os.path.abspath(os.path.join(root, filepath))
+                    # First guess the gcov root
+                    gcov_root = get_run_dir(args.gcov, abspath)
+
                     subprocess.call(
                         'cd "%s" && %s %s%s "%s"' % (
-                            gcov_root, args.gcov, args.gcov_options, local_gcov_options, filepath),
+                            gcov_root, args.gcov, args.gcov_options,
+                            local_gcov_options, abspath),
                         shell=True)
                 # If gcov was run in the build root move the resulting gcov
                 # file to the same directory as the .o file.

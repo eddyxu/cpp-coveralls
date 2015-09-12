@@ -3,7 +3,6 @@ language: python
 python:
     - "2.7"
     - "pypy"
-    - "3.2"
     - "3.3"
     - "3.4"
 
@@ -12,4 +11,6 @@ install:
 
 script:
     - nosetests
-    - ./test.bash
+    - cd tests
+    - cd simpletest && ./test.bash
+    - cd ../issue65 && ./test.sh
