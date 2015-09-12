@@ -249,7 +249,7 @@ def run_gcov(args):
 
                     subprocess.call('cd "%s" && find .' % gcov_root, shell=True)
                     subprocess.call(
-                        'cd "%s" && %s %s%s "%s"' % (
+                        'cd "%s" && %s -r %s%s "%s"' % (
                             gcov_root, args.gcov, args.gcov_options,
                             local_gcov_options, abspath),
                         shell=True)
