@@ -244,6 +244,8 @@ def run_gcov(args):
                     abspath = os.path.abspath(os.path.join(root, filepath))
                     # First guess the gcov root
                     gcov_root = get_run_dir(args.gcov, abspath)
+                    if gcov_root != root:
+                        subprocess.call('cp %s.gc* %s' % (os.path.join(root, basename), gcov_root), shell=True)
 
                     subprocess.call(
                         'cd "%s" && %s %s%s "%s"' % (
