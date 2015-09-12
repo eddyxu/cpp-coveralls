@@ -251,7 +251,7 @@ def run_gcov(args):
                     subprocess.call(
                         'cd "%s" && %s -r %s%s "%s"' % (
                             gcov_root, args.gcov, args.gcov_options,
-                            local_gcov_options, abspath),
+                            local_gcov_options, basename),
                         shell=True)
                 # If gcov was run in the build root move the resulting gcov
                 # file to the same directory as the .o file.
