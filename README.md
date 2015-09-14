@@ -1,7 +1,7 @@
 Upload C/C++ coverage report to coveralls.io
 =============
 
-[![PyPI version](https://badge.fury.io/py/cpp-coveralls.svg)](http://badge.fury.io/py/cpp-coveralls) [![Build Status](https://travis-ci.org/eddyxu/cpp-coveralls.svg?branch=master)](https://travis-ci.org/eddyxu/cpp-coveralls) [![Code Quality](https://landscape.io/github/eddyxu/cpp-coveralls/master/landscape.png)](https://landscape.io/github/eddyxu/cpp-coveralls/master)
+[![PyPI version](https://badge.fury.io/py/cpp-coveralls.svg)](http://badge.fury.io/py/cpp-coveralls) [![Build Status](https://travis-ci.org/eddyxu/cpp-coveralls.svg?branch=master)](https://travis-ci.org/eddyxu/cpp-coveralls) [![Code Quality](https://landscape.io/github/eddyxu/cpp-coveralls/master/landscape.svg)](https://landscape.io/github/eddyxu/cpp-coveralls/master)
 
 Inspired from [z4r/python-coveralls](https://github.com/z4r/python-coveralls), it uploads the coverage report of C/C++ project to [coveralls.io](https://coveralls.io/)
 
