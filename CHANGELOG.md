@@ -1,8 +1,8 @@
 Version 0.3.10 (Sep 14th, 2015)
-  * Source code may contain colons (#93 by @d-fray)
+  * Source code may contain colons (#93 by @d-frey)
   * Fix lcov exclusion keyword: end -> stop (#91 by @remram44)
-  * sudo not required (#96 by @d-fray)
-  * Use SVG instead of PNG (#97 by @d-fray)
+  * sudo not required (#96 by @d-frey)
+  * Use SVG instead of PNG (#97 by @d-frey)
   * Add Python 3.5 support (by @eddyxu)
 
 Version 0.3.9 (June 21th, 2015)
