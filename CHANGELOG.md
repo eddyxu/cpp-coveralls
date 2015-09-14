@@ -1,4 +1,11 @@
-Version 0.3.9 (June 21th, 2014)
+Version 0.3.10 (Sep 14th, 2015)
+  * Source code may contain colons (#93 by @d-fray)
+  * Fix lcov exclusion keyword: end -> stop (#91 by @remram44)
+  * sudo not required (#96 by @d-fray)
+  * Use SVG instead of PNG (#97 by @d-fray)
+  * Add Python 3.5 support (by @eddyxu)
+
+Version 0.3.9 (June 21th, 2015)
   * Add the follow-symlinks option to the remaining os.walk calls. (#90 by @nomis52)
 
 Version 0.3.8 (June 20th, 2015)
