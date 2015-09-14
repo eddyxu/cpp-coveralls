@@ -67,7 +67,7 @@ language: cpp
 compiler:
   - gcc
 before_install:
-  - sudo pip install cpp-coveralls
+  - pip install --user cpp-coveralls
 script:
   - ./configure --enable-gcov && make && make check
 after_success:
