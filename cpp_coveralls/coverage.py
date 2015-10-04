@@ -230,7 +230,7 @@ def parse_gcov_file(fobj, filename):
     coverage = []
     ignoring = False
     for line in fobj:
-        report_fields = line.split(':', 2)
+        report_fields = line.decode('utf-8', 'replace').split(':', 2)
         if len(report_fields) == 1:
             continue
 
@@ -347,8 +347,8 @@ def collect(args):
         for filepath in files:
             if os.path.splitext(filepath)[1] == '.gcov':
                 gcov_path = os.path.join(os.path.join(root, filepath))
-                with open(gcov_path) as fobj:
-                    source_file_line = fobj.readline()
+                with open(gcov_path, mode='rb') as fobj:
+                    source_file_line = fobj.readline().decode('utf-8', 'replace')
                     source_file_path = source_file_line.split(':')[-1].strip()
                     if not os.path.isabs(source_file_path):
                         if args.build_root:
