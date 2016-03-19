@@ -150,6 +150,10 @@ def is_excluded_path(args, filepath):
     return False
 
 
+def posix_path(path):
+    return path.replace(os.path.sep, '/')
+
+
 def is_libtool_dir(dir_path):
     return os.path.basename(dir_path) == ".libs"
 
@@ -314,7 +318,7 @@ def collect_non_report_files(args, discovered_files):
             filepath = os.path.relpath(abs_filepath, abs_root)
             if filepath not in discovered_files:
                 src_report = {}
-                src_report['name'] = filepath
+                src_report['name'] = posix_path(filepath)
                 coverage = []
                 with io.open(abs_filepath, mode='rb') as fobj:
                     for _ in fobj:
@@ -359,7 +363,7 @@ def collect(args):
                                 libtool_source_file_path(
                                     root, source_file_path))
                         else:
-                            if not source_file_path.startswith('../') and \
+                            if not source_file_path.startswith(os.path.pardir + os.path.sep) and \
                                     os.path.dirname(source_file_path):
                                 the_root = abs_root
                             else:
@@ -367,13 +371,13 @@ def collect(args):
                             source_file_path = os.path.abspath(
                                 os.path.join(the_root, source_file_path))
                     src_path = os.path.relpath(source_file_path, abs_root)
-                    if len(src_path) > 3 and src_path.startswith('../'):
+                    if src_path.startswith(os.path.pardir + os.path.sep):
                         continue
                     if is_excluded_path(args, source_file_path):
                         continue
 
                     src_report = {}
-                    src_report['name'] = src_path
+                    src_report['name'] = posix_path(src_path)
                     discovered_files.add(src_path)
                     with io.open(source_file_path, mode='rb') as src_file:
                         src_report['source_digest'] = hashlib.md5(src_file.read()).hexdigest()
