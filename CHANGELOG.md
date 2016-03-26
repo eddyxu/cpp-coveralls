@@ -1,3 +1,8 @@
+Version 0.3.11 (March 25th, 2015)
+  * Recognize APPVEYOR_REPO_BRANCH environment var. (#102 by @jrfonseca)
+  * Generate POSIX paths on Windows. (#101 by @jrfonseca)
+  * Continue on errors decoding unsupported characters (#99 by @albfan)
+
 Version 0.3.10 (Sep 14th, 2015)
   * Source code may contain colons (#93 by @d-frey)
   * Fix lcov exclusion keyword: end -> stop (#91 by @remram44)
