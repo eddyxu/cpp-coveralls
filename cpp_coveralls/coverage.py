@@ -72,6 +72,12 @@ def create_args(params):
                         help='Follow symlinks (default off)')
     parser.add_argument('-l', '--lcov-file', metavar='FILE',
                         help='Upload lcov generated info file')
+    parser.add_argument('--max-cov-count', metavar='NUMBER',
+                        help='Max number for line coverage count. If line'
+                             'coverage count is greater than the given number'
+                             '(Max + 1) will be put instead. Helps in managing'
+                             'line coverage count which is higher than max int'
+                             'value supported by coveralls.')
 
     return parser.parse_args(params)
 
@@ -293,6 +299,9 @@ def parse_lcov_file_info(args, filepath, line_iter, line_coverage_re, file_end_s
                 if line_coverage_match:
                     line_no = line_coverage_match.group(1)
                     cov_count = int(line_coverage_match.group(2))
+                    if args.max_cov_count:
+                        if cov_count > args.max_cov_count:
+                            cov_count = args.max_cov_count + 1
                     lines_covered.append((line_no, cov_count))
             else:
                 break
