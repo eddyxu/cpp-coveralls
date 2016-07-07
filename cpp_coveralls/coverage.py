@@ -70,6 +70,14 @@ def create_args(params):
                         default=None, metavar='FILE')
     parser.add_argument('--follow-symlinks', action='store_true',
                         help='Follow symlinks (default off)')
+    parser.add_argument('-l', '--lcov-file', metavar='FILE',
+                        help='Upload lcov generated info file')
+    parser.add_argument('--max-cov-count', metavar='NUMBER',
+                        help='Max number for line coverage count. If line'
+                             'coverage count is greater than the given number'
+                             '(Max + 1) will be put instead. Helps in managing'
+                             'line coverage count which is higher than max int'
+                             'value supported by coveralls.')
 
     return parser.parse_args(params)
 
@@ -278,6 +286,34 @@ def parse_gcov_file(fobj, filename):
             coverage.append(int(cov_num))
     return coverage
 
+def parse_lcov_file_info(args, filepath, line_iter, line_coverage_re, file_end_string):
+    """ Parse the file content in lcov info file
+    """
+    coverage = []
+    lines_covered = []
+    while True:
+        try:
+            line = line_iter.next()
+            if line != "end_of_record":
+                line_coverage_match = line_coverage_re.match(line)
+                if line_coverage_match:
+                    line_no = line_coverage_match.group(1)
+                    cov_count = int(line_coverage_match.group(2))
+                    if args.max_cov_count:
+                        if cov_count > args.max_cov_count:
+                            cov_count = args.max_cov_count + 1
+                    lines_covered.append((line_no, cov_count))
+            else:
+                break
+        except StopIteration:
+            break
+
+    num_code_lines = len([line.rstrip('\n') for line in open(filepath, 'r')])
+    coverage = [None] * num_code_lines
+    for line_covered in lines_covered:
+        coverage[int(line_covered[0]) - 1] = line_covered[1]
+
+    return coverage
 
 def combine_reports(original, new):
     """Combines two gcov reports for a file into one by adding the number of hits on each line
@@ -298,7 +334,6 @@ def combine_reports(original, new):
 
     report['coverage'] = coverage
     return report
-
 
 def collect_non_report_files(args, discovered_files):
     """Collects the source files that have no coverage reports.
@@ -344,54 +379,82 @@ def collect(args):
     discovered_files = set()
     src_files = {}
     abs_root = os.path.abspath(args.root)
-    for root, dirs, files in os.walk(args.root, followlinks=args.follow_symlinks):
-        dirs[:] = filter_dirs(root, dirs, excl_paths)
-
-        root_is_libtool_dir = is_libtool_dir(root)
-        for filepath in files:
-            if os.path.splitext(filepath)[1] == '.gcov':
-                gcov_path = os.path.join(os.path.join(root, filepath))
-                with open(gcov_path, mode='rb') as fobj:
-                    source_file_line = fobj.readline().decode('utf-8', 'replace')
-                    source_file_path = source_file_line.split(':')[-1].strip()
-                    if not os.path.isabs(source_file_path):
-                        if args.build_root:
-                            source_file_path = os.path.join(
-                                args.build_root, source_file_path)
-                        elif root_is_libtool_dir:
-                            source_file_path = os.path.abspath(
-                                libtool_source_file_path(
-                                    root, source_file_path))
-                        else:
-                            if not source_file_path.startswith(os.path.pardir + os.path.sep) and \
-                                    os.path.dirname(source_file_path):
-                                the_root = abs_root
-                            else:
-                                the_root = root
-                            source_file_path = os.path.abspath(
-                                os.path.join(the_root, source_file_path))
-                    src_path = os.path.relpath(source_file_path, abs_root)
-                    if src_path.startswith(os.path.pardir + os.path.sep):
-                        continue
-                    if is_excluded_path(args, source_file_path):
-                        continue
-
+    if args.lcov_file:
+        info_lines = [line.rstrip('\n') for line in open(args.lcov_file, 'r')]
+        line_iter = iter(info_lines)
+        new_file_re = re.compile('SF:(.*)')
+        line_coverage_re = re.compile('DA:(\d+),(\d+)');
+        while True:
+            try:
+                line = line_iter.next()
+                new_file_match = new_file_re.match(line)
+                if new_file_match:
                     src_report = {}
-                    src_report['name'] = posix_path(src_path)
-                    discovered_files.add(src_path)
-                    with io.open(source_file_path, mode='rb') as src_file:
+                    filepath = new_file_match.group(1)
+                    if args.build_root:
+                        filepath = os.path.relpath(filepath, args.build_root)
+                    abs_filepath = os.path.join(abs_root, filepath)
+                    src_report['name'] = unicode(posix_path(filepath))
+                    with io.open(abs_filepath, mode='rb') as src_file:
                         src_report['source_digest'] = hashlib.md5(src_file.read()).hexdigest()
+                    src_report['coverage'] = parse_lcov_file_info(args, abs_filepath, line_iter, line_coverage_re, "end_of_record")
+                    src_files[filepath] = src_report
+                elif line != "TN:":
+                    print('Invalid info file')
+                    print('line: ' + line)
+                    sys.exit(0)
+            except StopIteration:
+                break
+    else:
+        for root, dirs, files in os.walk(args.root, followlinks=args.follow_symlinks):
+            dirs[:] = filter_dirs(root, dirs, excl_paths)
 
-                    src_report['coverage'] = parse_gcov_file(fobj, gcov_path)
-                    if src_path in src_files:
-                        src_files[src_path] = combine_reports(src_files[src_path], src_report)
-                    else:
-                        src_files[src_path] = src_report
+            root_is_libtool_dir = is_libtool_dir(root)
+            for filepath in files:
+                if os.path.splitext(filepath)[1] == '.gcov':
+                    gcov_path = os.path.join(os.path.join(root, filepath))
+                    with open(gcov_path, mode='rb') as fobj:
+                        source_file_line = fobj.readline().decode('utf-8', 'replace')
+                        source_file_path = source_file_line.split(':')[-1].strip()
+                        if not os.path.isabs(source_file_path):
+                            if args.build_root:
+                                source_file_path = os.path.join(
+                                    args.build_root, source_file_path)
+                            elif root_is_libtool_dir:
+                                source_file_path = os.path.abspath(
+                                    libtool_source_file_path(
+                                        root, source_file_path))
+                            else:
+                                if not source_file_path.startswith(os.path.pardir + os.path.sep) and \
+                                        os.path.dirname(source_file_path):
+                                    the_root = abs_root
+                                else:
+                                    the_root = root
+                                source_file_path = os.path.abspath(
+                                    os.path.join(the_root, source_file_path))
+                        src_path = os.path.relpath(source_file_path, abs_root)
+                        if src_path.startswith(os.path.pardir + os.path.sep):
+                            continue
+                        if is_excluded_path(args, source_file_path):
+                            continue
+
+                        src_report = {}
+                        src_report['name'] = posix_path(src_path)
+                        discovered_files.add(src_path)
+                        with io.open(source_file_path, mode='rb') as src_file:
+                            src_report['source_digest'] = hashlib.md5(src_file.read()).hexdigest()
+
+                        src_report['coverage'] = parse_gcov_file(fobj, gcov_path)
+                        if src_path in src_files:
+                            src_files[src_path] = combine_reports(src_files[src_path], src_report)
+                        else:
+                            src_files[src_path] = src_report
 
     report['source_files'] = list(src_files.values())
     # Also collects the source files that have no coverage reports.
-    report['source_files'].extend(
-        collect_non_report_files(args, discovered_files))
+    if not args.lcov_file:
+        report['source_files'].extend(
+            collect_non_report_files(args, discovered_files))
 
     # Use the root directory to get information on the Git repository
     report['git'] = gitrepo.gitrepo(abs_root)
