@@ -397,10 +397,12 @@ def collect(args):
                     src_report['name'] = unicode(posix_path(filepath))
                     with io.open(abs_filepath, mode='rb') as src_file:
                         src_report['source_digest'] = hashlib.md5(src_file.read()).hexdigest()
-                    src_report['coverage'] = parse_lcov_file_info(abs_filepath, line_iter, line_coverage_re, "end_of_record")
+                    src_report['coverage'] = parse_lcov_file_info(args, abs_filepath, line_iter, line_coverage_re, "end_of_record")
                     src_files[filepath] = src_report
                 elif line != "TN:":
-                    print "invalid info file"
+                    print('Invalid info file')
+                    print('line: ' + line)
+                    sys.exit(0)
             except StopIteration:
                 break
     else:
