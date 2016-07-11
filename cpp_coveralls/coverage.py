@@ -300,8 +300,8 @@ def parse_lcov_file_info(args, filepath, line_iter, line_coverage_re, file_end_s
                     line_no = line_coverage_match.group(1)
                     cov_count = int(line_coverage_match.group(2))
                     if args.max_cov_count:
-                        if cov_count > args.max_cov_count:
-                            cov_count = args.max_cov_count + 1
+                        if cov_count > int(args.max_cov_count):
+                            cov_count = int(args.max_cov_count) + 1
                     lines_covered.append((line_no, cov_count))
             else:
                 break
