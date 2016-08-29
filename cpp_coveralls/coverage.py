@@ -376,7 +376,7 @@ def collect(args):
     report['service_name'] = args.service_name
     report['service_job_id'] = args.service_job_id
 
-    if os.getenv('COVERALLS_PARALLEL')
+    if os.getenv('COVERALLS_PARALLEL', False)
         report['parallel'] = 'true'
 
     discovered_files = set()
