@@ -3,9 +3,9 @@ from __future__ import print_function
 
 import requests
 import json
+import os
 
-URL = 'https://coveralls.io/api/v1/jobs'
-
+URL = os.getenv('COVERALLS_ENDPOINT', 'https://coveralls.io') + "/api/v1/jobs"
 
 def post_report(coverage):
     """Post coverage report to coveralls.io."""
