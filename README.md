@@ -5,11 +5,19 @@ Upload C/C++ coverage report to coveralls.io
 
 Inspired from [z4r/python-coveralls](https://github.com/z4r/python-coveralls), it uploads the coverage report of C/C++ project to [coveralls.io](https://coveralls.io/)
 
-# Instruction
+# Instructions
 
  * Build your project with [gcov support](http://gcc.gnu.org/onlinedocs/gcc/Gcov.html)
  * Run tests
  * Run `coveralls`
+
+## Environment variables
+
+`cpp-coveralls` recognizes the following environment variables:
+- `COVERALLS_REPO_TOKEN`
+- `COVERALLS_ENDPOINT`
+- `COVERALLS_PARALLEL`
+
 
 ## Usage:
 
