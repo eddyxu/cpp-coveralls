@@ -1,4 +1,8 @@
-Version 0.3.11 (March 25th, 2015)
+Version 0.3.12 (August 29th, 2016)
+  * Support COVERALLS_ENDPOINT for Enterprise usage (#106 by @nickmerwin)
+  * Support for lcov .info file upload and max line coverage count (#104 by @sumedhghaisas)
+
+Version 0.3.11 (March 25th, 2016)
   * Recognize APPVEYOR_REPO_BRANCH environment var. (#102 by @jrfonseca)
   * Generate POSIX paths on Windows. (#101 by @jrfonseca)
   * Continue on errors decoding unsupported characters (#99 by @albfan)
