@@ -3,10 +3,10 @@
 #
 # Copyright 2015 (c) Lei Xu <eddyxu@gmail.com>
 
-import tempfile
 import unittest
 
 from . import coverage
+
 
 class CoverageTest(unittest.TestCase):
     def setUp(self):

@@ -29,6 +29,8 @@ def gitrepo(cwd):
 
     """
     repo = Repository(cwd)
+    if not repo.valid():
+        return {}
 
     return {
         'head': {
@@ -40,9 +42,10 @@ def gitrepo(cwd):
             'message': repo.gitlog('%s')
         },
         'branch': os.environ.get('TRAVIS_BRANCH',
-                  os.environ.get('APPVEYOR_REPO_BRANCH',  repo.git('rev-parse', '--abbrev-ref', 'HEAD').strip())),
+                  os.environ.get('APPVEYOR_REPO_BRANCH',
+                                 repo.git('rev-parse', '--abbrev-ref', 'HEAD')[1].strip())),
         'remotes': [{'name': line.split()[0], 'url': line.split()[1]}
-                    for line in repo.git('remote', '-v') if '(fetch)' in line]
+                    for line in repo.git('remote', '-v')[1] if '(fetch)' in line]
     }
 
 
@@ -51,12 +54,22 @@ class Repository(object):
     def __init__(self, cwd):
         self.cwd = cwd
 
+    def valid(self):
+        """
+        :return: true if it is a valid git repository.
+        """
+        return self.git("log", "-1")[0] == 0
+
     def gitlog(self, fmt):
-        return self.git('--no-pager', 'log', '-1', '--pretty=format:%s' % fmt)
+        return self.git('--no-pager', 'log', '-1', '--pretty=format:%s' % fmt)[1]
 
     def git(self, *arguments):
-        """Return output from git."""
+        """
+        Return (exit code, output) from git.
+        """
         process = subprocess.Popen(['git'] + list(arguments),
                                    stdout=subprocess.PIPE,
                                    cwd=self.cwd)
-        return process.communicate()[0].decode('UTF-8')
+        out = process.communicate()[0].decode('UTF-8')
+        code = process.returncode
+        return code, out
