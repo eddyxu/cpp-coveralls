@@ -72,7 +72,7 @@ def create_args(params):
                         help='Follow symlinks (default off)')
     parser.add_argument('-l', '--lcov-file', metavar='FILE',
                         help='Upload lcov generated info file')
-    parser.add_argument('--max-cov-count', metavar='NUMBER',
+    parser.add_argument('--max-cov-count', metavar='NUMBER', type=int,
                         help='Max number for line coverage count. If line'
                              'coverage count is greater than the given number'
                              '(Max + 1) will be put instead. Helps in managing'
