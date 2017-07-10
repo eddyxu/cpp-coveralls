@@ -84,6 +84,7 @@ def run():
 
     args.exclude.extend(yml.get('exclude', []))
     args.include.extend(yml.get('include', []))
+    args.exclude_lines_pattern.extend(yml.get('exclude_lines_pattern', []))
 
     args.service_job_id = os.environ.get('TRAVIS_JOB_ID', '')
 
