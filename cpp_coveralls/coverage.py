@@ -3,6 +3,7 @@
 # Copyright 2015 (c) Lei Xu <eddyxu@gmail.com>
 
 from __future__ import absolute_import
+from builtins import str
 
 import argparse
 import hashlib
@@ -292,21 +293,17 @@ def parse_lcov_file_info(args, filepath, line_iter, line_coverage_re, file_end_s
     """
     coverage = []
     lines_covered = []
-    while True:
-        try:
-            line = line_iter.next()
-            if line != "end_of_record":
-                line_coverage_match = line_coverage_re.match(line)
-                if line_coverage_match:
-                    line_no = line_coverage_match.group(1)
-                    cov_count = int(line_coverage_match.group(2))
-                    if args.max_cov_count:
-                        if cov_count > args.max_cov_count:
-                            cov_count = args.max_cov_count + 1
-                    lines_covered.append((line_no, cov_count))
-            else:
-                break
-        except StopIteration:
+    for line in line_iter:
+        if line != "end_of_record":
+            line_coverage_match = line_coverage_re.match(line)
+            if line_coverage_match:
+                line_no = line_coverage_match.group(1)
+                cov_count = int(line_coverage_match.group(2))
+                if args.max_cov_count:
+                    if cov_count > args.max_cov_count:
+                        cov_count = args.max_cov_count + 1
+                lines_covered.append((line_no, cov_count))
+        else:
             break
 
     num_code_lines = len([line.rstrip('\n') for line in open(filepath, 'r')])
@@ -394,27 +391,23 @@ def collect(args):
         line_iter = iter(info_lines)
         new_file_re = re.compile('SF:(.*)')
         line_coverage_re = re.compile('DA:(\d+),(\d+)');
-        while True:
-            try:
-                line = line_iter.next()
-                new_file_match = new_file_re.match(line)
-                if new_file_match:
-                    src_report = {}
-                    filepath = new_file_match.group(1)
-                    if args.build_root:
-                        filepath = os.path.relpath(filepath, args.build_root)
-                    abs_filepath = os.path.join(abs_root, filepath)
-                    src_report['name'] = unicode(posix_path(filepath))
-                    with io.open(abs_filepath, mode='rb') as src_file:
-                        src_report['source_digest'] = hashlib.md5(src_file.read()).hexdigest()
-                    src_report['coverage'] = parse_lcov_file_info(args, abs_filepath, line_iter, line_coverage_re, "end_of_record")
-                    src_files[filepath] = src_report
-                elif line != "TN:":
-                    print('Invalid info file')
-                    print('line: ' + line)
-                    sys.exit(0)
-            except StopIteration:
-                break
+        for line in line_iter:
+            new_file_match = new_file_re.match(line)
+            if new_file_match:
+                src_report = {}
+                filepath = new_file_match.group(1)
+                if args.root:
+                    filepath = os.path.relpath(filepath, args.root)
+                abs_filepath = os.path.join(abs_root, filepath)
+                src_report['name'] = str(posix_path(filepath))
+                with io.open(abs_filepath, mode='rb') as src_file:
+                    src_report['source_digest'] = hashlib.md5(src_file.read()).hexdigest()
+                src_report['coverage'] = parse_lcov_file_info(args, abs_filepath, line_iter, line_coverage_re, "end_of_record")
+                src_files[filepath] = src_report
+            elif line != "TN:":
+                print('Invalid info file')
+                print('line: ' + line)
+                sys.exit(0)
     else:
         for root, dirs, files in os.walk(args.root, followlinks=args.follow_symlinks):
             dirs[:] = filter_dirs(root, dirs, excl_paths)
