@@ -48,6 +48,9 @@ def create_args(params):
     parser.add_argument('-E', '--exclude-pattern', dest='regexp',
                         action='append', metavar='REGEXP', default=[],
                         help='set exclude file/directory pattern')
+    parser.add_argument('--exclude-lines-pattern',
+                        action='append', metavar='REGEXP', default=[],
+                        help='set exclude file/directory pattern')
     parser.add_argument('-x', '--extension', metavar='EXT', action='append',
                         help='set extension of files to process')
     parser.add_argument('-y', '--coveralls-yaml', default='.coveralls.yml',
@@ -236,7 +239,7 @@ def run_gcov(args):
                                       os.path.join(root, files))
 
 
-def parse_gcov_file(fobj, filename):
+def parse_gcov_file(args, fobj, filename):
     """Parses the content of .gcov file
     """
     coverage = []
@@ -271,9 +274,7 @@ def parse_gcov_file(fobj, filename):
             # Avoid false positives.
             if (
                 ignoring or
-                text.lstrip().startswith(('inline', 'static')) or
-                text.strip() == '}' or
-                re.search(r'\bLCOV_EXCL_LINE\b', text)
+                any([re.search(pattern, text) for pattern in args.exclude_lines_pattern])
             ):
                 coverage.append(None)
             else:
@@ -379,6 +380,12 @@ def collect(args):
     if os.getenv('COVERALLS_PARALLEL', False):
         report['parallel'] = 'true'
 
+    args.exclude_lines_pattern.extend([
+        r'\bLCOV_EXCL_LINE\b',
+        r'^\s*};?\s*$',
+        r'^\s*(inline|static)'
+        ])
+
     discovered_files = set()
     src_files = {}
     abs_root = os.path.abspath(args.root)
@@ -447,7 +454,7 @@ def collect(args):
                         with io.open(source_file_path, mode='rb') as src_file:
                             src_report['source_digest'] = hashlib.md5(src_file.read()).hexdigest()
 
-                        src_report['coverage'] = parse_gcov_file(fobj, gcov_path)
+                        src_report['coverage'] = parse_gcov_file(args, fobj, gcov_path)
                         if src_path in src_files:
                             src_files[src_path] = combine_reports(src_files[src_path], src_report)
                         else:

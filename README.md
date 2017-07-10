@@ -50,6 +50,8 @@ optional arguments:
                         set include file or directory
   -E REGEXP, --exclude-pattern REGEXP
                         set exclude file/directory pattern
+  --exclude-lines-pattern REGEXP
+                        set exclude lines pattern
   -x EXT, --extension EXT
                         set extension of files to process
   -y FILE, --coveralls-yaml FILE
