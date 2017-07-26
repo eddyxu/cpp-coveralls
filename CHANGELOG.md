@@ -1,3 +1,11 @@
+Version 0.4 (July 26th, 2017)
+  * Python 3 compatibility (by @nitnelave)
+  * Add YML config for exclude_lines_pattern. (by @jkjjnitnelave)
+  * Add an option to provide a pattern of excluded lines (#117 by @nitnelave)
+  * Fix error reporting on non-git directory (#114 by @eddyxu)
+  * Adding `urllib3[secure]` to requirements.txt. (#108 by @mkfifo)
+  * Update README to reference supported environment variables. (#107 by @jtbandes)
+
 Version 0.3.12 (August 29th, 2016)
   * Support COVERALLS_ENDPOINT for Enterprise usage (#106 by @nickmerwin)
   * Support for lcov .info file upload and max line coverage count (#104 by @sumedhghaisas)
