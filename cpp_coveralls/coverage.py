@@ -356,7 +356,7 @@ def collect_non_report_files(args, discovered_files):
                 coverage = []
                 with io.open(abs_filepath, mode='rb') as fobj:
                     for _ in fobj:
-                        coverage.append(None)
+                        coverage.append(0)
                     fobj.seek(0)
                     src_report['source_digest'] = hashlib.md5(fobj.read()).hexdigest()
                 src_report['coverage'] = coverage
