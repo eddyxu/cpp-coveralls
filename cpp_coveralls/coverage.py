@@ -285,7 +285,7 @@ def parse_gcov_file(args, fobj, filename):
             # error.
             coverage.append(0)
         else:
-            coverage.append(int(cov_num))
+            coverage.append(int(cov_num.rstrip('*')))
     return coverage
 
 def parse_lcov_file_info(args, filepath, line_iter, line_coverage_re, file_end_string):
