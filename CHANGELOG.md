@@ -1,3 +1,6 @@
+Version 0.4.1 (Dec 1th, 2018)
+  * gcov: accommodate the execution_count format change in GCC 8.1 (by @ueno)
+
 Version 0.4 (July 26th, 2017)
   * Python 3 compatibility (by @nitnelave)
   * Add YML config for exclude_lines_pattern. (by @jkjjnitnelave)

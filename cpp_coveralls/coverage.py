@@ -288,6 +288,7 @@ def parse_gcov_file(args, fobj, filename):
             coverage.append(int(cov_num.rstrip('*')))
     return coverage
 
+
 def parse_lcov_file_info(args, filepath, line_iter, line_coverage_re, file_end_string):
     """ Parse the file content in lcov info file
     """

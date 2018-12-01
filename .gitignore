@@ -30,3 +30,5 @@ nosetests.xml
 *.mo
 
 *.swp
+
+.idea
