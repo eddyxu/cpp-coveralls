@@ -246,6 +246,7 @@ def parse_gcov_file(args, fobj, filename):
     coverage = []
     ignoring = False
     for line in fobj:
+        print(line)
         report_fields = line.decode('utf-8', 'replace').split(':', 2)
         if len(report_fields) == 1:
             continue
