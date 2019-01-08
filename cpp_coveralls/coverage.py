@@ -250,7 +250,6 @@ def parse_gcov_file(args, fobj, filename):
         print(report_fields)
         if len(report_fields) !=3:
             continue
-        
         cov_num = report_fields[0].strip()
         line_num = int(report_fields[1].strip())
         text = report_fields[2]
