@@ -103,4 +103,4 @@ def run():
         args.dump.write(json.dumps(cov_report))
         return 0
 
-    return report.post_report(cov_report)
+    return report.post_report(cov_report, args)

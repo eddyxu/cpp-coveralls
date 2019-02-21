@@ -7,9 +7,10 @@ import os
 
 URL = os.getenv('COVERALLS_ENDPOINT', 'https://coveralls.io') + "/api/v1/jobs"
 
-def post_report(coverage):
+def post_report(coverage, args):
     """Post coverage report to coveralls.io."""
-    response = requests.post(URL, files={'json_file': json.dumps(coverage)})
+    response = requests.post(URL, files={'json_file': json.dumps(coverage)},
+                             verify=(not args.skip_ssl_verify))
     try:
         result = response.json()
     except ValueError:
