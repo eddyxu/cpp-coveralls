@@ -27,6 +27,7 @@ usage: coveralls [-h] [--verbose] [--dryrun] [--gcov FILE]
                  [--gcov-options GCOV_OPTS] [-r DIR] [-b DIR] [-e DIR|FILE]
                  [-i DIR|FILE] [-E REGEXP] [-x EXT] [-y FILE] [-n] [-t TOKEN]
                  [--encodings ENCODINGS [ENCODINGS ...]] [--dump [FILE]]
+                 [--skip-ssl-verify]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -65,6 +66,7 @@ optional arguments:
                         source encodings to try in order of preference
                         (default: ['utf-8', 'latin-1'])
   --dump [FILE]         dump JSON payload to a file
+  --skip-ssl-verify     skip ssl certificate verification when communicating with the coveralls server
 ```
 
 ## Example `.travis.yml`

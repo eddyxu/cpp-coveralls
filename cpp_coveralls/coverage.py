@@ -82,6 +82,10 @@ def create_args(params):
                              '(Max + 1) will be put instead. Helps in managing'
                              'line coverage count which is higher than max int'
                              'value supported by coveralls.')
+    parser.add_argument('--skip-ssl-verify',
+                        help='skip ssl certificate verification when '
+                        'communicating with the coveralls server',
+                        action='store_true', default=False)
 
     return parser.parse_args(params)
 
