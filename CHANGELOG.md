@@ -1,3 +1,7 @@
+Version 0.4.2 (March 9th, 2019)
+  * parse_gcov_file: handle empty/no lnum (#140 by @blueyed)
+  * added skip-ssl-verify argument (#141 by @nickmerwin)
+
 Version 0.4.1 (Dec 1th, 2018)
   * gcov: accommodate the execution_count format change in GCC 8.1 (by @ueno)
 
