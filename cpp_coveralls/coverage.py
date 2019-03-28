@@ -180,7 +180,29 @@ def libtool_dir_to_source_dir(dir_path):
 
 def libtool_source_file_path(dir_path, source_file_path):
     source_dir_path = libtool_dir_to_source_dir(dir_path)
+
+    source_file_path = \
+         reduce_path_overlap(source_dir_path, source_file_path)
     return os.path.join(source_dir_path, source_file_path)
+
+
+def reduce_path_overlap(path_a, path_b):
+    # Match common path parts such as:
+    # a/b/c/d and b/c/d/e : will reduce the latter to e
+    # a/b/c/d and e       : will not change anything
+    # a/b/c/d and e/f     : will not change anything
+    pb = path_b.split(os.sep)
+    if len(pb) > 1:
+        pa = path_a.split(os.sep)
+
+        c = min(len(pa), len(pb))
+
+        while c > 0 and pa[-c:] != pb[:c]:
+            c -= 1
+        if c > 0:
+            pb = pb[c:]
+            path_b = os.sep.join(pb)
+    return path_b
 
 
 def filter_dirs(root, dirs, excl_paths):

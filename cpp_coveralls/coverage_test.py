@@ -42,5 +42,23 @@ class CoverageTest(unittest.TestCase):
         self.assertTrue(coverage.is_excluded_path(args, '/src/bar/bar-and-bar.txt'))
         self.assertTrue(coverage.is_excluded_path(args, '/src/foo/subfoo/subfoo.txt'))
 
+
+    def test_reduce_path_overlap(self):
+        self.assertEqual(coverage.reduce_path_overlap('a/b/c/d',
+                                                      'b/c/d/e'),
+                         'e')
+        self.assertEqual(coverage.reduce_path_overlap('a/b/c/d',
+                                                      'e'),
+                         'e')
+        self.assertEqual(coverage.reduce_path_overlap('a/b/c/d',
+                                                      'e/f'),
+                         'e/f')
+        self.assertEqual(coverage.reduce_path_overlap('a/b/c/d',
+                                                      'd/e/f'),
+                         'e/f')
+        self.assertEqual(coverage.reduce_path_overlap('a/b/c/d',
+                                                      'e/d/f'),
+                         'e/d/f')
+
 if __name__ == '__main__':
     unittest.main()
