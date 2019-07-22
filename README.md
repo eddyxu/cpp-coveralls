@@ -17,6 +17,7 @@ Inspired from [z4r/python-coveralls](https://github.com/z4r/python-coveralls), i
 - `COVERALLS_REPO_TOKEN`
 - `COVERALLS_ENDPOINT`
 - `COVERALLS_PARALLEL`
+- `CI_SERVICE_NAME`
 
 
 ## Usage:

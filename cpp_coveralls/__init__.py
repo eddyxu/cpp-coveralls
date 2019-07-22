@@ -73,7 +73,13 @@ def run():
         # use environment COVERALLS_REPO_TOKEN as a fallback
         args.repo_token = os.environ.get('COVERALLS_REPO_TOKEN')
 
-    args.service_name = yml.get('service_name', 'travis-ci')
+    args.service_name = yml.get('service_name', '')
+    if not args.service_name:
+        # use environment CI_SERVICE_NAME as a fallback
+        args.service_name = os.environ.get('CI_SERVICE_NAME')
+    if not args.service_name:
+        # use default 'travis-ci' as a fallback 2
+        args.service_name = 'travis-ci'
 
     if not args.gcov_options:
         args.gcov_options = yml.get('gcov_options', '')
