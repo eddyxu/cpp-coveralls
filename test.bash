@@ -1,34 +1,36 @@
-#!/bin/bash -ex
+#!/bin/bash
 #
 # Run system test.
 
-coveralls --help
+export PATH="$PATH:$PWD/test-utils"
 
-cat > foo.c <<'EOF'
-int main() {
-    int a = 1;
-    if(a == 2) {
-        a = 3;
-        /* LCOV_EXCL_START */
-        a = 4;
-        a = 5;
-        /* LCOV_EXCL_STOP */
-        a = 6;
-    }
-    if(a == 7) {
-        a = 8;
-        a = 9; /* LCOV_EXCL_LINE */
-    }
-    return 0;
+exit_on_fail="no"
+
+function ParseArguments {
+    while [[ "$1" != "" ]]; do
+        if [[ "$1" == "-e" || "$1" == "--exit-on-fail" ]]; then
+            exit_on_fail="yes"
+        fi
+        shift
+    done
 }
-EOF
-gcc -coverage -o foo foo.c
-./foo
 
-if [ -z "$TRAVIS_JOB_ID" ]; then
-    export COVERALLS_REPO_TOKEN="fake testing token"
+failed_tests=0
+function TestFailed {
+    let "failed_tests+=1"
+    if [[ "$exit_on_fail" == "yes" ]]; then
+        echo "(-e): Exiting due to first failure"
+        exit 1
+    fi
+}
+
+ParseArguments $@
+
+testDir.sh $@ test-src/simple || TestFailed
+
+if [[ $failed_tests -gt 0 ]]; then
+    echo ""
+    echo "FAIL: $failed_tests unexpected failures!"
 fi
 
-coveralls --verbose --encodings utf-8 latin-1 foobar | \
-    grep '\[1, 1, 1, 0, None, None, None, None, 0, None, 1, 0, None, None, 1, None\]'
-rm -f foo foo.c* foo.gc*
+exit $failed_tests

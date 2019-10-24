@@ -7,6 +7,11 @@ python:
     - "3.4"
     - "3.5"
 
+addons:
+  apt:
+    packages:
+      - lcov
+
 install:
     - python setup.py --quiet install
 

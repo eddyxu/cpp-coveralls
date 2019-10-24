@@ -1,0 +1,6 @@
+{
+    "source_files": [{
+        "name": "foo.c",
+        "coverage": [1, 1, 1, 0, null, null, null, null, 0, null, 1, 0, null, null, 1, null],
+        "source_digest": "500a03d2484de8cc2b9ed06615d7f02a"}]
+}
