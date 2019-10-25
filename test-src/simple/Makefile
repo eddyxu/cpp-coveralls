@@ -4,5 +4,7 @@ foo: foo.c
 clean:
 	rm -f foo *.gcno *.gcda output *.gcov output.json
 
-test: foo
+prepare_test: foo
+
+test: prepare_test
 	./foo

@@ -259,7 +259,7 @@ function CheckGCOV {
 
     Make $logfile test
 
-    CppCoverals $logfile "$gcov_coveralls_dir" --dump $PWD/output.json --verbose  $gcov_coveralls_flags
+    CppCoverals $logfile "$gcov_coveralls_dir" --gcov-options '\-lp' --dump $PWD/output.json --verbose  $gcov_coveralls_flags
 
     CheckResult $logfile "$gcov_expected_output" "$gcov_fail_reason"
 

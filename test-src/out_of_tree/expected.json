@@ -1,0 +1,15 @@
+{
+    "source_files": [{
+        "name": "source_tree/llib/lib.cpp",
+        "coverage": [null, null, 1, 1, 1, null, 1, 1, 1]
+    }, {
+        "name": "source_tree/llib/lib.h",
+        "coverage": [null, null, null, null, null, 1, 1,  null]
+    }, {
+        "name": "source_tree/A/a.cpp",
+        "coverage": [null, null, 1, 1, 1, null, 1, 1, null]
+    }, {
+        "name": "source_tree/B/b.cpp",
+        "coverage": [null, null, 1, 1, 1, null, 1, 1, null]
+    }]
+}
