@@ -9,12 +9,25 @@ python:
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
       - lcov
+      - g++-4.8
+      - g++-5
+      - g++-6
+      - g++-7
+      - g++-8
+      - g++-9
+      - g++-9
+# Required for latest lcov build - TODO: remove the need for this...
+      - libperlio-gzip-perl
+      - libjson-perl
 
 install:
     - python setup.py --quiet install
 
 script:
     - nosetests
-    - ./test.bash
+    - git clone https://github.com/linux-test-project/lcov.git
+    - PATH="$PWD/lcov/bin:$PATH" ./test.bash --gcc-version 4.8 --gcc-version 5 --gcc-version 6 --gcc-version 7 --gcc-version 8 --gcc-version 9

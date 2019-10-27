@@ -25,7 +25,7 @@ pip-log.txt
 .coverage
 .tox
 nosetests.xml
-*_test_output
+*_test_output*
 *.gcov
 output.json
 *.gcno

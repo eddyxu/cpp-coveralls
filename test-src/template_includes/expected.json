@@ -1,10 +1,10 @@
 {
     "source_files": [{
             "name": "A.cpp",
-            "coverage": [null, null, 1, null, 1, null]
+            "coverage": [null, null, null, null, 1, null, 1, null]
         }, {
             "name": "B.cpp",
-            "coverage": [null, null, 1, null, 1, null]
+            "coverage": [null, null, null, null, 1, null, 1, null]
         }, {
             "name": "common_header.h",
             "coverage": [null, null, 1, 1, null, null, 1, 1, null, null]

@@ -1,14 +1,14 @@
 llib/lib.o: llib/lib.cpp llib/lib.h
-	g++ --coverage -c -o $@ llib/lib.cpp
+	$(CXX) --coverage -c -o $@ llib/lib.cpp
 
 llib/lib.a: llib/lib.o
 	ar cr $@ $+
 
 A/a: A/a.cpp llib/lib.a
-	cd A && g++ --coverage -I../llib -o a a.cpp ../llib/lib.a
+	cd A && $(CXX) --coverage -I../llib -o a a.cpp ../llib/lib.a
 
 B/b: B/b.cpp llib/lib.a
-	cd B && g++ --coverage -I../llib -o b b.cpp ../llib/lib.a
+	cd B && $(CXX) --coverage -I../llib -o b b.cpp ../llib/lib.a
 
 prepare_test: A/a B/b
 

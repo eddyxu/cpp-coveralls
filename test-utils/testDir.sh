@@ -1,5 +1,8 @@
 #!/bin/bash
 
+gcc_versions=""
+default_gcc_versions="4.8 5 6 7 8 9"
+
 # START: Valid config.sh options
 #    The following variables can be set in the directory's config.sh file
 
@@ -12,7 +15,6 @@ lcov_fail_reason=""
 # Modes to test in (default "gcov lcov")
 #
 modes="gcov lcov"
-
 
 # Set to override the build directory (default is the test's root directory).
 # This is where "make" will be invoked.
@@ -59,10 +61,13 @@ exit_on_fail="no"
 
 
 function Usage {
-    echo "testDir.sh [-e/ --exit-on-fail] test-src/<dir to test>"
+    echo "testDir.sh [-e/ --exit-on-fail] [--gcc-version <version>] test-src/<dir to test>"
     echo ""
     echo "Options:"
     echo "   -e / --exit-on-fail: Stop execution at the first unexpected failure."
+    echo "   --gcc_version      : Version of gcc to test (e.g 5 for g++-5 / gcov-5)"
+    echo "                        (May be specified multiple times)"
+    echo "                        By default the following versions are tested: $default_gcc_versions"
 }
 
 #
@@ -72,10 +77,24 @@ function Usage {
 #     @: The set of arguments parsed to this script
 #
 function ParseArguments {
-    if [[ "$1" == "-e" || "$1" == "--exit-on-fail" ]]; then
-        exit_on_fail="yes"
-        shift
+    done="no"
+    while [[ "$done" != "yes" ]]; do
+        if [[ "$1" == "-e" || "$1" == "--exit-on-fail" ]]; then
+            exit_on_fail="yes"
+            shift
+        elif [[ "$1" == "--gcc-version" ]]; then
+            gcc_versions+=" $2"
+            shift
+            shift
+        else
+            done="yes"
+        fi
+    done
+
+    if [[ "$gcc_versions" == "" ]]; then
+        gcc_versions=$default_gcc_versions
     fi
+
 
     test_dir=$1
 
@@ -83,10 +102,20 @@ function ParseArguments {
         echo "Cannot find test directory: $test_dir"
         Usage
         exit 1
+    else
+        # hack to get the absolute path
+        pushd $test_dir > /dev/null || exit 1
+        test_dir=$PWD
+        popd > /dev/null || exit 1
     fi
 }
 
 function SetupEnvironment {
+    gcc_version=$1
+
+    export CXX="g++-$gcc_version"
+    export GCOV="gcov-$gcc_version"
+
     if [ -z "$TRAVIS_JOB_ID" ]; then
         export COVERALLS_REPO_TOKEN="fake testing token"
     fi
@@ -252,14 +281,14 @@ function Exit {
 #  Arguments: None
 #
 function CheckGCOV {
-    echo -n ">> Checking $PWD using GCOV..."
+    echo -n ">> Checking $PWD using GCOV (CXX:$CXX, GCOV:$GCOV)..."
 
-    logfile="$PWD/gcov_test_output"
+    logfile="$PWD/gcov_test_output_$gcc_version"
     CleanUp  > $logfile 2>&1
 
     Make $logfile test
 
-    CppCoverals $logfile "$gcov_coveralls_dir" --gcov-options '\-lp' --dump $PWD/output.json --verbose  $gcov_coveralls_flags
+    CppCoverals $logfile "$gcov_coveralls_dir" --gcov $GCOV --gcov-options '\-lp' --dump $PWD/output.json --verbose  $gcov_coveralls_flags
 
     CheckResult $logfile "$gcov_expected_output" "$gcov_fail_reason"
 
@@ -272,20 +301,20 @@ function CheckGCOV {
 #  Arguments: None
 #
 function CheckLCOV {
-    echo -n ">> Checking $PWD using LCOV..."
+    echo -n ">> Checking $PWD using LCOV (CXX:$CXX, GCOV:$GCOV)..."
 
-    logfile="$PWD/lcov_test_output"
+    logfile="$PWD/lcov_test_output_$gcc_version"
     CleanUp  > $logfile 2>&1
 
     Make $logfile prepare_test
 
-    LCov $logfile --capture -d . -i --output-file="$PWD/lcov_baseline.info"
+    LCov $logfile --gcov-tool "$GCOV" --capture -d . -i --output-file="$PWD/lcov_baseline.info"
 
     Make $logfile test
 
-    LCov $logfile --capture -d . --output-file="$PWD/lcov_test_run.info"
+    LCov $logfile --gcov-tool "$GCOV" --capture -d . --output-file="$PWD/lcov_test_run.info"
 
-    LCov $logfile $lcov_flags -a $PWD/lcov_baseline.info -a $PWD/lcov_test_run.info -o "$PWD/lcov.info"
+    LCov $logfile --gcov-tool "$GCOV" $lcov_flags -a $PWD/lcov_baseline.info -a $PWD/lcov_test_run.info -o "$PWD/lcov.info"
 
     CppCoverals $logfile "$lcov_coveralls_dir" --dump $PWD/output.json --no-gcov --lcov-file="$PWD/lcov.info" $lcov_coveralls_flags
 
@@ -307,18 +336,18 @@ function CleanUp {
 
 ParseArguments $@
 
-SetupEnvironment
+for v in $gcc_versions; do
+    SetupEnvironment $v
 
-for mode in $modes; do
-    if [[ "$mode" == "gcov" ]]; then
-        CheckGCOV
-    elif [[ "$mode" == "lcov" ]]; then
-        CheckLCOV
-    else
-        Exit /dev/stdout "Unknown test mode requested: $mode"
-    fi
+    for mode in $modes; do
+        if [[ "$mode" == "gcov" ]]; then
+            CheckGCOV
+        elif [[ "$mode" == "lcov" ]]; then
+            CheckLCOV
+        else
+            Exit /dev/stdout "Unknown test mode requested: $mode"
+        fi
+    done
 done
-
-
 
 exit $failed_tests
