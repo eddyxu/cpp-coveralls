@@ -1,3 +1,4 @@
 requests
 urllib3[secure]
 future
+pyyaml
