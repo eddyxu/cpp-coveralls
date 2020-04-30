@@ -86,10 +86,11 @@ def create_args(params):
                         help='skip ssl certificate verification when '
                         'communicating with the coveralls server',
                         action='store_true', default=False)
-    parser.add_argument('--service-name', type=str, default=None, help="CI service name")
-    parser.add_argument('--service-job-id', type=str, default=None, help="CI job ID")
+    parser.add_argument('--service-name', type=str, default=None, help="The CI service or other environment in which the test suite was run. This can be anything, but certain services have special features (travis-ci, travis-pro, or coveralls-ruby).")
+    parser.add_argument('--service-job-id', type=str, default=None, help="A unique identifier of the job on the service specified by service_name.")
+    parser.add_argument('--service-number', type=str, default=None, help="The build number. Will default to chronological numbering from builds on repo.")
     parser.add_argument('--parallel', action='store_true', help="Send a few reports and merge")
-    parser.add_argument('action', type=str, default='report', nargs='?', choices=['report', 'finish-report'], help="If the --parallel reports were used, the reports has to be finalized with a 'finish-report' action")
+    parser.add_argument('action', type=str, default='report', nargs='?', choices=['report', 'finish-report'], help="If the --parallel reports were used, the reports has to be finalized with a 'finish-report' action.")
 
     return parser.parse_args(params)
 
@@ -385,6 +386,9 @@ def collect(args):
 
     report['service_name'] = args.service_name
     report['service_job_id'] = args.service_job_id
+
+    if args.service_number:
+        report['service_number'] = args.service_number
 
     if args.parallel:
         report['parallel'] = args.parallel

@@ -97,18 +97,17 @@ def run():
         raise ValueError("\nno coveralls.io token specified and no travis job id found\n"
                          "see --help for examples on how to specify a token\n")
 
-    if not args.no_gcov:
-        coverage.run_gcov(args)
-    cov_report = coverage.collect(args)
-    if args.verbose:
-        print(cov_report)
-    if args.dryrun:
-        return 0
-    if args.dump:
-        args.dump.write(json.dumps(cov_report))
-        return 0
-
     if args.action == 'report':
+        if not args.no_gcov:
+            coverage.run_gcov(args)
+        cov_report = coverage.collect(args)
+        if args.verbose:
+            print(cov_report)
+        if args.dryrun:
+            return 0
+        if args.dump:
+            args.dump.write(json.dumps(cov_report))
+            return 0
         return report.post_report(cov_report, args)
     elif args.action == 'finish-report':
         return report.finish_report(args)

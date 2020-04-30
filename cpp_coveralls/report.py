@@ -32,6 +32,6 @@ def finish_report(args):
         verify=(not args.skip_ssl_verify))
 
     if response.status_code != 200:
-        return response.reason
+        return response.status_code, response.reason, data
     else:
         return 0
