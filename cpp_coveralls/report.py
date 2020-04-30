@@ -27,7 +27,7 @@ def post_report(coverage, args):
 def finish_report(args):
     """Finish a parallel reporting: https://docs.coveralls.io/parallel-build-webhook"""
     api_endpoint = f'{ENDPOINT}/webhook?repo_token={args.repo_token}'
-    data = {'payload':{'build_num': args.service_job_id,'status':'done'}}
+    data = {'payload[build_num]': args.service_number, 'payload[status]':'done'}
     response = requests.post(api_endpoint, data=data,
         verify=(not args.skip_ssl_verify))
 
