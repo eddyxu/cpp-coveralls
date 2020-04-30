@@ -86,6 +86,8 @@ def create_args(params):
                         help='skip ssl certificate verification when '
                         'communicating with the coveralls server',
                         action='store_true', default=False)
+    parser.add_argument('--service-name', type=str, default=None)
+    parser.add_argument('--service-job-id', type=str, default=None)
 
     return parser.parse_args(params)
 
