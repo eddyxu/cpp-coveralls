@@ -110,7 +110,7 @@ def run():
 
     if args.action == 'report':
         return report.post_report(cov_report, args)
-    elif args.action == 'finsh-report':
+    elif args.action == 'finish-report':
         return report.finish_report(args)
     else:
         raise ValueError("Not supported action")

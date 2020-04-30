@@ -32,6 +32,6 @@ def finish_report(args):
         verify=(not args.skip_ssl_verify))
 
     if response.status_code != 200:
-        return response.json()['error']
+        return response.reason
     else:
         return 0
