@@ -90,6 +90,9 @@ def run():
     if args.service_job_id is None:
         args.service_job_id = os.environ.get('TRAVIS_JOB_ID', '')
 
+    if not args.parallel:
+        args.parallel = os.getenv('COVERALLS_PARALLEL', False)
+
     if args.repo_token == '' and args.service_job_id == '':
         raise ValueError("\nno coveralls.io token specified and no travis job id found\n"
                          "see --help for examples on how to specify a token\n")
@@ -105,4 +108,9 @@ def run():
         args.dump.write(json.dumps(cov_report))
         return 0
 
-    return report.post_report(cov_report, args)
+    if args.action == 'report':
+        return report.post_report(cov_report, args)
+    elif args.action == 'finsh-report':
+        return report.finish_report(args)
+    else:
+        raise ValueError("Not supported action")

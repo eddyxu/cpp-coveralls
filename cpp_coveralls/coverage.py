@@ -86,8 +86,10 @@ def create_args(params):
                         help='skip ssl certificate verification when '
                         'communicating with the coveralls server',
                         action='store_true', default=False)
-    parser.add_argument('--service-name', type=str, default=None)
-    parser.add_argument('--service-job-id', type=str, default=None)
+    parser.add_argument('--service-name', type=str, default=None, help="CI service name")
+    parser.add_argument('--service-job-id', type=str, default=None, help="CI job ID")
+    parser.add_argument('--parallel', action='store_true', help="Send a few reports and merge")
+    parser.add_argument('action', type=str, default='report', choices=['report', 'finish-report'], help="If the --parallel reports were used, the reports has to be finalized with a 'finish-report' action")
 
     return parser.parse_args(params)
 
@@ -384,8 +386,8 @@ def collect(args):
     report['service_name'] = args.service_name
     report['service_job_id'] = args.service_job_id
 
-    if os.getenv('COVERALLS_PARALLEL', False):
-        report['parallel'] = 'true'
+    if args.parallel:
+        report['parallel'] = args.parallel
 
     args.exclude_lines_pattern.extend([
         r'\bLCOV_EXCL_LINE\b',
