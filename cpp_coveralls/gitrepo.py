@@ -41,7 +41,7 @@ def gitrepo(cwd):
             'committer_email': repo.gitlog('%ce'),
             'message': repo.gitlog('%s')
         },
-        'branch': os.environ.get('TRAVIS_BRANCH',
+        'branch': os.environ.get('CI_BRANCH',
                   os.environ.get('APPVEYOR_REPO_BRANCH',
                                  repo.git('rev-parse', '--abbrev-ref', 'HEAD')[1].strip())),
         'remotes': [{'name': line.split()[0], 'url': line.split()[1]}
