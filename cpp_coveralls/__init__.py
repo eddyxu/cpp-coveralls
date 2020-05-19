@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 __author__ = 'Lei Xu <eddyxu@gmail.com>'
-__version__ = '0.4.2'
+__version__ = '0.4.3'
 
 __classifiers__ = [
     'Development Status :: 3 - Alpha',
@@ -73,8 +73,6 @@ def run():
         # use environment COVERALLS_REPO_TOKEN as a fallback
         args.repo_token = os.environ.get('COVERALLS_REPO_TOKEN')
 
-    args.service_name = yml.get('service_name', 'travis-ci')
-
     if not args.gcov_options:
         args.gcov_options = yml.get('gcov_options', '')
     if not args.root:
@@ -86,7 +84,9 @@ def run():
     args.include.extend(yml.get('include', []))
     args.exclude_lines_pattern.extend(yml.get('exclude_lines_pattern', []))
 
-    args.service_job_id = os.environ.get('TRAVIS_JOB_ID', '')
+    args.service_name = os.environ.get('CI_NAME', '')
+    args.service_job_id = os.environ.get('CI_BUILD_NUMBER', '')
+    args.service_pull_request = os.environ.get('CI_PULL_REQUEST', 'false')
 
     if args.repo_token == '' and args.service_job_id == '':
         raise ValueError("\nno coveralls.io token specified and no travis job id found\n"
