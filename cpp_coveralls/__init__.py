@@ -57,6 +57,7 @@ def run():
     import json
     import os
     import sys
+    import time
     from . import coverage, report
 
     args = coverage.create_args(sys.argv[1:])
@@ -91,6 +92,10 @@ def run():
     if args.repo_token == '' and args.service_job_id == '':
         raise ValueError("\nno coveralls.io token specified and no travis job id found\n"
                          "see --help for examples on how to specify a token\n")
+
+    if args.service_job_id == '':
+        epoch = str(time.time()).split('.')[0]
+        args.service_job_id = "%s-%s" % (os.environ.get('CI_BRANCH', ''), epoch)
 
     if not args.no_gcov:
         coverage.run_gcov(args)
