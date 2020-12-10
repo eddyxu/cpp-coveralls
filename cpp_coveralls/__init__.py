@@ -76,7 +76,7 @@ def run():
 
     args.service_name = yml.get('service_name',
                         os.get.environ('COVERALLS_SERVICE_NAME',
-                                       'travis-ci')
+                                       'travis-ci'))
 
     if not args.gcov_options:
         args.gcov_options = yml.get('gcov_options', '')
