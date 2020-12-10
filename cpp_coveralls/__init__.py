@@ -75,7 +75,7 @@ def run():
         args.repo_token = os.environ.get('COVERALLS_REPO_TOKEN')
 
     args.service_name = yml.get('service_name',
-                        os.get.environ('COVERALLS_SERVICE_NAME',
+                        os.environ.get('COVERALLS_SERVICE_NAME',
                                        'travis-ci'))
 
     if not args.gcov_options:
