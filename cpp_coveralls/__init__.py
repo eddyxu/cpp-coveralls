@@ -1,3 +1,4 @@
+# THIS FILE HAS BEEN MODIFIED BY D7919
 from __future__ import absolute_import
 from __future__ import print_function
 
@@ -86,7 +87,9 @@ def run():
     args.include.extend(yml.get('include', []))
     args.exclude_lines_pattern.extend(yml.get('exclude_lines_pattern', []))
 
-    args.service_job_id = os.environ.get('TRAVIS_JOB_ID', '')
+    args.service_job_id = os.environ.get('TRAVIS_JOB_ID',
+                          os.environ.get('CI_PIPELINE_ID',
+                                         ''))
 
     if args.repo_token == '' and args.service_job_id == '':
         raise ValueError("\nno coveralls.io token specified and no travis job id found\n"
