@@ -43,7 +43,8 @@ def gitrepo(cwd):
         },
         'branch': os.environ.get('TRAVIS_BRANCH',
                   os.environ.get('APPVEYOR_REPO_BRANCH',
-                                 repo.git('rev-parse', '--abbrev-ref', 'HEAD')[1].strip())),
+                  os.environ.get('CI_COMMIT_BRANCH',
+                                 repo.git('rev-parse', '--abbrev-ref', 'HEAD')[1].strip()))),
         'remotes': [{'name': line.split()[0], 'url': line.split()[1]}
                     for line in repo.git('remote', '-v')[1] if '(fetch)' in line]
     }
