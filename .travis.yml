@@ -1,11 +1,9 @@
 language: python
 
 python:
-    - "2.7"
-    - "pypy"
-#    - "3.3" # removed due to issue #128
-    - "3.4"
-    - "3.5"
+    - "3.7"
+    - "3.8"
+    - "3.9"
 
 install:
     - python setup.py --quiet install
