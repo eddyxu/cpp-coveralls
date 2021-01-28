@@ -39,7 +39,8 @@ def gitrepo(cwd):
             'author_email': repo.gitlog('%ae'),
             'committer_name': repo.gitlog('%cN'),
             'committer_email': repo.gitlog('%ce'),
-            'message': repo.gitlog('%s')
+            'message': repo.gitlog('%s'),
+            'rev_count': repo.git('rev-list', '--count', 'HEAD')[1].strip()
         },
         'branch': os.environ.get('TRAVIS_BRANCH',
                   os.environ.get('APPVEYOR_REPO_BRANCH',

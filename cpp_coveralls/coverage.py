@@ -374,13 +374,27 @@ def collect_non_report_files(args, discovered_files):
 def collect(args):
     """Collect coverage reports."""
     excl_paths = exclude_paths(args)
+    abs_root = os.path.abspath(args.root)
 
     report = {}
+    # Use the root directory to get information on the Git repository
+    report['git'] = gitrepo.gitrepo(abs_root)
+
     if args.repo_token:
         report['repo_token'] = args.repo_token
 
     report['service_name'] = args.service_name
     report['service_job_id'] = args.service_job_id
+
+    # If the service_name + service_job_id is not set to identify build,
+    # the default build numbers auto-incremented by coveralls.io seems to never advance
+    # (doing just incremental changes to original build #1), so this git revision number
+    # hack is used to get something more meaningful (at least at the project I'm trying
+    # to make this work, it's acting like this, numbering coverage data 1.1, 1.2, 1.3,..)
+    ## This may be inherently wrong solution and complete hack, feel free to comment+help
+    # to resolve this in more appropriate way. by Ped7g ( https://github.com/ped7g )
+    if not args.service_job_id:
+        report['service_number'] = report['git']['head']['rev_count']
 
     if os.getenv('COVERALLS_PARALLEL', False):
         report['parallel'] = 'true'
@@ -393,7 +407,6 @@ def collect(args):
 
     discovered_files = set()
     src_files = {}
-    abs_root = os.path.abspath(args.root)
     if args.lcov_file:
         info_lines = [line.rstrip('\n') for line in open(args.lcov_file, 'r')]
         line_iter = iter(info_lines)
@@ -467,6 +480,4 @@ def collect(args):
         report['source_files'].extend(
             collect_non_report_files(args, discovered_files))
 
-    # Use the root directory to get information on the Git repository
-    report['git'] = gitrepo.gitrepo(abs_root)
     return report
