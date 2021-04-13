@@ -86,6 +86,14 @@ def create_args(params):
                         help='skip ssl certificate verification when '
                         'communicating with the coveralls server',
                         action='store_true', default=False)
+    parser.add_argument('-p', '--prefix', metavar="DIR",
+                        help='A prefix to prepend to generated filenames. '
+                             'This option is useful when source files exist '
+                             'in the root directory and you want to simulate '
+                             'a source tree in coveralls.io. for example, if '
+                             'you pass --prefix foo, filenames in '
+                             'coveralls.io will be shown as foo/bar.c.'
+                        )
 
     return parser.parse_args(params)
 
@@ -469,4 +477,10 @@ def collect(args):
 
     # Use the root directory to get information on the Git repository
     report['git'] = gitrepo.gitrepo(abs_root)
+
+    # Prepent the prefix to sourcefiles if given.
+    if args.prefix:
+        for sourcefile in report['source_files']:
+            sourcefile['name'] = os.path.join(args.prefix, sourcefile['name'])
+
     return report
