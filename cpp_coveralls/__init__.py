@@ -73,9 +73,9 @@ def run():
         # use environment COVERALLS_REPO_TOKEN as a fallback
         args.repo_token = os.environ.get('COVERALLS_REPO_TOKEN')
 
-    if not args.service_name:
-        # try get service name from yaml first
-        args.service_name = yml.get('service_name', '')
+
+    # try get service name from yaml first
+    args.service_name = yml.get('service_name', '')
     if not args.service_name:
         # use environment COVERALLS_SERVICE_NAME as a fallback
         args.service_name = os.environ.get('COVERALLS_SERVICE_NAME')
