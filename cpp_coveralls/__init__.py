@@ -94,7 +94,14 @@ def run():
     args.include.extend(yml.get('include', []))
     args.exclude_lines_pattern.extend(yml.get('exclude_lines_pattern', []))
 
-    args.service_job_id = os.environ.get('TRAVIS_JOB_ID', '')
+    if(args.service_name == 'travis-ci'):
+        args.service_job_id = os.environ.get('TRAVIS_JOB_ID', '')
+    elif(args.service_name == 'appveyor'):
+        args.service_job_id = os.environ.get('APPVEYOR_BUILD_ID', '')
+    elif(args.service_name == 'circle-ci'):
+        args.service_job_id = os.environ.get('CIRCLE_WORKFLOW_ID', '')
+    else:
+        args.service_job_id = os.environ.get('CI_BUILD_ID', '')
 
     if args.repo_token == '' and args.service_job_id == '':
         raise ValueError("\nno coveralls.io token specified and no travis job id found\n"

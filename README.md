@@ -99,8 +99,8 @@ before_install:
   - brew update
   - brew install pyenv
   - eval "$(pyenv init -)"
-  - pyenv install 2.7.6
-  - pyenv global 2.7.6
+  - pyenv install 3.7
+  - pyenv global 3.7
   - pyenv rehash
   - pip install cpp-coveralls
   - pyenv rehash
