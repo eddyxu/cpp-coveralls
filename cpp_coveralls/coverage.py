@@ -260,7 +260,11 @@ def parse_gcov_file(args, fobj, filename):
         cov_num = report_fields[0].strip()
         line_num = int(line_num)
         text = report_fields[2]
-        if line_num == 0:
+
+        # skip gcov meta data and
+        # repeated lines for instances(templated code), because the 1st occurence reports the total count, we can
+        # ignore the instance specializations
+        if line_num == 0 or line_num <= len(coverage):
             continue
         if re.search(r'\bLCOV_EXCL_START\b', text):
             if ignoring:
