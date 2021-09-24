@@ -68,6 +68,11 @@ optional arguments:
                         (default: ['utf-8', 'latin-1'])
   --dump [FILE]         dump JSON payload to a file
   --skip-ssl-verify     skip ssl certificate verification when communicating with the coveralls server
+  -p DIR, --prefix DIR  A prefix to prepend to generated filenames. This 
+                        option is useful when source files exist in the root 
+                        directory and you want to simulate a source tree in 
+                        coveralls.io. for example, if you pass --prefix foo, 
+                        filenames in coveralls.io will be shown as foo/bar.c.
 ```
 
 ## Example `.travis.yml`
