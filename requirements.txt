@@ -2,3 +2,4 @@ idna>=2.5,<3
 requests>=2.25.1
 urllib3[secure]
 future
+pyyaml
