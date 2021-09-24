@@ -1,0 +1,15 @@
+{
+    "source_files": [{
+        "name": "llib/lib.cpp",
+        "coverage": [null, null, 1, 1, 1, null, 1, 1, 1]
+    }, {
+        "name": "llib/lib.h",
+        "coverage": [null, null, null, null, null, 1, 1,  null]
+    }, {
+        "name": "A/a.cpp",
+        "coverage": [null, null, 1, 1, 1, null, 1, 1, null]
+    }, {
+        "name": "B/b.cpp",
+        "coverage": [null, null, 1, 1, 1, null, 1, 1, null]
+    }]
+}
