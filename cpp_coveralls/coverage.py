@@ -376,11 +376,14 @@ def collect(args):
     excl_paths = exclude_paths(args)
 
     report = {}
+    # We should set either repo_token or service_name and service_job_id,
+    # see: https://docs.coveralls.io/api-introduction
     if args.repo_token:
         report['repo_token'] = args.repo_token
 
-    report['service_name'] = args.service_name
-    report['service_job_id'] = args.service_job_id
+    if args.service_name and args.service_job_id:
+        report['service_name'] = args.service_name
+        report['service_job_id'] = args.service_job_id
 
     if os.getenv('COVERALLS_PARALLEL', False):
         report['parallel'] = 'true'
