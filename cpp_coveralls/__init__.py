@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 __author__ = 'Lei Xu <eddyxu@gmail.com>'
-__version__ = '0.4.2'
+__version__ = '0.4.3'
 
 __classifiers__ = [
     'Development Status :: 3 - Alpha',
@@ -73,9 +73,9 @@ def run():
         # use environment COVERALLS_REPO_TOKEN as a fallback
         args.repo_token = os.environ.get('COVERALLS_REPO_TOKEN')
 
-
     # try get service name from yaml first
-    args.service_name = yml.get('service_name', '')
+    if not args.service_name:
+        args.service_name = yml.get('service_name', '')
     if not args.service_name:
         # use environment COVERALLS_SERVICE_NAME as a fallback
         args.service_name = os.environ.get('COVERALLS_SERVICE_NAME')
@@ -94,21 +94,29 @@ def run():
     args.include.extend(yml.get('include', []))
     args.exclude_lines_pattern.extend(yml.get('exclude_lines_pattern', []))
 
-    args.service_job_id = os.environ.get('TRAVIS_JOB_ID', '')
+    if args.service_job_id is None:
+        args.service_job_id = os.environ.get('TRAVIS_JOB_ID', '')
+
+    if not args.parallel:
+        args.parallel = os.getenv('COVERALLS_PARALLEL', False)
 
     if args.repo_token == '' and args.service_job_id == '':
         raise ValueError("\nno coveralls.io token specified and no travis job id found\n"
                          "see --help for examples on how to specify a token\n")
 
-    if not args.no_gcov:
-        coverage.run_gcov(args)
-    cov_report = coverage.collect(args)
-    if args.verbose:
-        print(cov_report)
-    if args.dryrun:
-        return 0
-    if args.dump:
-        args.dump.write(json.dumps(cov_report))
-        return 0
-
-    return report.post_report(cov_report, args)
+    if args.action == 'report':
+        if not args.no_gcov:
+            coverage.run_gcov(args)
+        cov_report = coverage.collect(args)
+        if args.verbose:
+            print(cov_report)
+        if args.dryrun:
+            return 0
+        if args.dump:
+            args.dump.write(json.dumps(cov_report))
+            return 0
+        return report.post_report(cov_report, args)
+    elif args.action == 'finish-report':
+        return report.finish_report(args)
+    else:
+        raise ValueError("Not supported action")

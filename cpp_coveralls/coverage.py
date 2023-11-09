@@ -86,6 +86,11 @@ def create_args(params):
                         help='skip ssl certificate verification when '
                         'communicating with the coveralls server',
                         action='store_true', default=False)
+    parser.add_argument('--service-name', type=str, default=None, help="The CI service or other environment in which the test suite was run. This can be anything, but certain services have special features (travis-ci, travis-pro, or coveralls-ruby).")
+    parser.add_argument('--service-job-id', type=str, default=None, help="A unique identifier of the job on the service specified by service_name.")
+    parser.add_argument('--service-build-number', type=str, default=None, help="The build number. Will default to chronological numbering from builds on repo.")
+    parser.add_argument('--parallel', action='store_true', help="Send a few reports and merge")
+    parser.add_argument('action', type=str, default='report', nargs='?', choices=['report', 'finish-report'], help="If the --parallel reports were used, the reports has to be finalized with a 'finish-report' action.")
 
     return parser.parse_args(params)
 
@@ -225,16 +230,18 @@ def run_gcov(args):
                             gcov_files.append(files)
                 if re.search(r".*\.c.*", basename):
                     path = os.path.abspath(os.path.join(root, basename + '.o'))
-                    subprocess.call(
-                        'cd "%s" && %s %s%s "%s"' % (
-                            gcov_root, args.gcov, args.gcov_options, local_gcov_options, path),
-                        shell=True)
+                    cmd = 'cd "%s" && %s %s%s "%s"' % (gcov_root, args.gcov, args.gcov_options, local_gcov_options, path)
+                    if args.verbose:
+                        print(cmd)
+
+                    subprocess.call(cmd, shell=True)
                 else:
                     path = os.path.abspath(os.path.join(root, basename))
-                    subprocess.call(
-                        'cd "%s" && %s %s%s "%s"' % (
-                            gcov_root, args.gcov, args.gcov_options, local_gcov_options, filepath),
-                        shell=True)
+                    cmd = 'cd "%s" && %s %s%s "%s"' % (gcov_root, args.gcov, args.gcov_options, local_gcov_options, filepath)
+                    if args.verbose:
+                        print(cmd)
+                        
+                    subprocess.call(cmd, shell=True)
                 # If gcov was run in the build root move the resulting gcov
                 # file to the same directory as the .o file.
                 if custom_gcov_root:
@@ -276,23 +283,32 @@ def parse_gcov_file(args, fobj, filename):
                 sys.stderr.write("Warning: %s:%d: LCOV_EXCL_STOP is the "
                                  "correct keyword\n" % (filename, line_num))
             ignoring = False
-        if cov_num == '-':
+
+        line_num -= 1
+        while len(coverage) <= line_num:
             coverage.append(None)
+
+        if cov_num == '-':
+            if coverage[line_num] is None:
+                coverage[line_num] = None
         elif cov_num == '#####':
             # Avoid false positives.
             if (
                 ignoring or
                 any([re.search(pattern, text) for pattern in args.exclude_lines_pattern])
             ):
-                coverage.append(None)
+                if coverage[line_num] is None:
+                    coverage[line_num] = None
             else:
-                coverage.append(0)
+                if coverage[line_num] is None:
+                    coverage[line_num] = 0
         elif cov_num == '=====':
             # This is indicitive of a gcov output parse
             # error.
-            coverage.append(0)
+            if coverage[line_num] is None:
+                coverage[line_num] = 0
         else:
-            coverage.append(int(cov_num.rstrip('*')))
+            coverage[line_num] = int(cov_num.rstrip('*'))
     return coverage
 
 
@@ -382,8 +398,11 @@ def collect(args):
     report['service_name'] = args.service_name
     report['service_job_id'] = args.service_job_id
 
-    if os.getenv('COVERALLS_PARALLEL', False):
-        report['parallel'] = 'true'
+    if args.service_build_number:
+        report['service_number'] = args.service_build_number
+
+    if args.parallel:
+        report['parallel'] = args.parallel
 
     args.exclude_lines_pattern.extend([
         r'\bLCOV_EXCL_LINE\b',
