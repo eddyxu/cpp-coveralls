@@ -230,16 +230,18 @@ def run_gcov(args):
                             gcov_files.append(files)
                 if re.search(r".*\.c.*", basename):
                     path = os.path.abspath(os.path.join(root, basename + '.o'))
-                    subprocess.call(
-                        'cd "%s" && %s %s%s "%s"' % (
-                            gcov_root, args.gcov, args.gcov_options, local_gcov_options, path),
-                        shell=True)
+                    cmd = 'cd "%s" && %s %s%s "%s"' % (gcov_root, args.gcov, args.gcov_options, local_gcov_options, path)
+                    if args.verbose:
+                        print(cmd)
+
+                    subprocess.call(cmd, shell=True)
                 else:
                     path = os.path.abspath(os.path.join(root, basename))
-                    subprocess.call(
-                        'cd "%s" && %s %s%s "%s"' % (
-                            gcov_root, args.gcov, args.gcov_options, local_gcov_options, filepath),
-                        shell=True)
+                    cmd = 'cd "%s" && %s %s%s "%s"' % (gcov_root, args.gcov, args.gcov_options, local_gcov_options, filepath)
+                    if args.verbose:
+                        print(cmd)
+                        
+                    subprocess.call(cmd, shell=True)
                 # If gcov was run in the build root move the resulting gcov
                 # file to the same directory as the .o file.
                 if custom_gcov_root:
@@ -281,23 +283,32 @@ def parse_gcov_file(args, fobj, filename):
                 sys.stderr.write("Warning: %s:%d: LCOV_EXCL_STOP is the "
                                  "correct keyword\n" % (filename, line_num))
             ignoring = False
-        if cov_num == '-':
+
+        line_num -= 1
+        while len(coverage) <= line_num:
             coverage.append(None)
+
+        if cov_num == '-':
+            if coverage[line_num] is None:
+                coverage[line_num] = None
         elif cov_num == '#####':
             # Avoid false positives.
             if (
                 ignoring or
                 any([re.search(pattern, text) for pattern in args.exclude_lines_pattern])
             ):
-                coverage.append(None)
+                if coverage[line_num] is None:
+                    coverage[line_num] = None
             else:
-                coverage.append(0)
+                if coverage[line_num] is None:
+                    coverage[line_num] = 0
         elif cov_num == '=====':
             # This is indicitive of a gcov output parse
             # error.
-            coverage.append(0)
+            if coverage[line_num] is None:
+                coverage[line_num] = 0
         else:
-            coverage.append(int(cov_num.rstrip('*')))
+            coverage[line_num] = int(cov_num.rstrip('*'))
     return coverage
 
 
